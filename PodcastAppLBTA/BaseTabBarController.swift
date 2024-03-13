@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  BaseTabBarController.swift
 //  PodcastAppLBTA
 //
 //  Created by Murat Ceyhun Korpeoglu on 13.03.2024.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class BaseTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .green
     }
 
 
