@@ -18,6 +18,9 @@
 		4361105C2BA1EED00081FAA8 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4361105B2BA1EED00081FAA8 /* BaseListController.swift */; };
 		436110622BA350890081FAA8 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110612BA350890081FAA8 /* SearchCell.swift */; };
 		436110642BA351000081FAA8 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110632BA351000081FAA8 /* UIView+Layout.swift */; };
+		436110672BA37D1B0081FAA8 /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110662BA37D1B0081FAA8 /* ServiceManager.swift */; };
+		4361106A2BA37E1C0081FAA8 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110692BA37E1C0081FAA8 /* Podcast.swift */; };
+		4361106D2BA3A3000081FAA8 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4361106C2BA3A3000081FAA8 /* SDWebImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,8 @@
 		4361105B2BA1EED00081FAA8 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 		436110612BA350890081FAA8 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		436110632BA351000081FAA8 /* UIView+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		436110662BA37D1B0081FAA8 /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
+		436110692BA37E1C0081FAA8 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4361106D2BA3A3000081FAA8 /* SDWebImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +74,8 @@
 			children = (
 				436110412BA1E1E30081FAA8 /* AppDelegate.swift */,
 				436110432BA1E1E30081FAA8 /* SceneDelegate.swift */,
+				436110682BA37E090081FAA8 /* Model */,
+				436110652BA37D090081FAA8 /* Service */,
 				4361105F2BA1F0160081FAA8 /* MainTabBarController */,
 				4361105D2BA1EFDF0081FAA8 /* Helpers */,
 				4361105E2BA1EFEB0081FAA8 /* ViewControllers */,
@@ -114,6 +122,22 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		436110652BA37D090081FAA8 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				436110662BA37D1B0081FAA8 /* ServiceManager.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		436110682BA37E090081FAA8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				436110692BA37E1C0081FAA8 /* Podcast.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -130,6 +154,9 @@
 			dependencies = (
 			);
 			name = PodcastAppLBTA;
+			packageProductDependencies = (
+				4361106C2BA3A3000081FAA8 /* SDWebImage */,
+			);
 			productName = PodcastAppLBTA;
 			productReference = 4361103E2BA1E1E30081FAA8 /* PodcastAppLBTA.app */;
 			productType = "com.apple.product-type.application";
@@ -158,6 +185,9 @@
 				Base,
 			);
 			mainGroup = 436110352BA1E1E30081FAA8;
+			packageReferences = (
+				4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+			);
 			productRefGroup = 4361103F2BA1E1E30081FAA8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -191,8 +221,10 @@
 				4361105C2BA1EED00081FAA8 /* BaseListController.swift in Sources */,
 				436110642BA351000081FAA8 /* UIView+Layout.swift in Sources */,
 				4361105A2BA1ED580081FAA8 /* DownloadsController.swift in Sources */,
+				4361106A2BA37E1C0081FAA8 /* Podcast.swift in Sources */,
 				436110442BA1E1E30081FAA8 /* SceneDelegate.swift in Sources */,
 				436110562BA1ED010081FAA8 /* SearchController.swift in Sources */,
+				436110672BA37D1B0081FAA8 /* ServiceManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +432,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4361106C2BA3A3000081FAA8 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 436110362BA1E1E30081FAA8 /* Project object */;
 }
