@@ -24,6 +24,10 @@ class SearchController: BaseListController, UISearchBarDelegate {
         return label
     }()
     
+    let aiv = UIActivityIndicatorView(style: .large)
+
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,6 +36,14 @@ class SearchController: BaseListController, UISearchBarDelegate {
         setupCell()
         setupSearchController()
         
+    }
+    
+    fileprivate func setupActivityIndicator() {
+        
+        view.addSubview(aiv)
+        aiv.fillSuperview(padding: .init(top: 90, left: 0, bottom: 0, right: 0))
+        aiv.startAnimating()
+
     }
     
     
@@ -50,15 +62,30 @@ class SearchController: BaseListController, UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
+        aiv.startAnimating()
         fetchPodcastsWithSearchTerm(searchTerm: searchText)
+        setupActivityIndicator()
+
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, animations: {
+            self.podcasts = []
+            self.label.isHidden = false
+            self.aiv.stopAnimating()
+            self.collectionView.reloadData()
+        })
     }
     
     fileprivate func fetchPodcastsWithSearchTerm(searchTerm: String) {
         
+        
+        
         let searchTerm = searchTerm.replacingOccurrences(of: " ", with: "+")
         
         let url = "https://itunes.apple.com/search?term=\(searchTerm)&entity=podcast"
+        
         
         ServiceManager.shared.fetchPodcasts(url: url) { podcasts, err in
             
@@ -67,29 +94,37 @@ class SearchController: BaseListController, UISearchBarDelegate {
                 return
             }
             
-           
-            
+
             guard let podcasts = podcasts?.results else {return}
+
+
             self.podcasts = podcasts
-            
+
             DispatchQueue.main.async {
-                
+            
                 self.label.isHidden = true
                 self.collectionView.reloadData()
                 
                 if searchTerm == "" {
                     self.podcasts = []
                     self.label.isHidden = false
+                    self.aiv.stopAnimating()
+                    self.collectionView.reloadData()
+                    return
                 }
+                
             }
-            
         }
-        
     }
     
 
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if podcasts.count != 0 {
+            aiv.stopAnimating()
+        }
+
         return podcasts.count
     }
     

@@ -13,7 +13,7 @@ class ServiceManager {
     
     func fetchPodcasts(url: String, completion: @escaping ((Podcast?, Error?) -> ())) {
         
-        
+
         guard let url = URL(string: url) else {return}
         
                 URLSession.shared.dataTask(with: url) { data, _, err in
