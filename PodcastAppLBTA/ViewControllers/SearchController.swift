@@ -17,9 +17,18 @@ class SearchController: BaseListController, UISearchBarDelegate {
     
     let searchController = UISearchController(searchResultsController: nil)
     
+    let label: UILabel = {
+        let label = UILabel()
+        label.text = "Please search a podcast..."
+        label.textAlignment = .center
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.addSubview(label)
+        label.fillSuperview()
         setupCell()
         setupSearchController()
         
@@ -50,7 +59,6 @@ class SearchController: BaseListController, UISearchBarDelegate {
         let searchTerm = searchTerm.replacingOccurrences(of: " ", with: "+")
         
         let url = "https://itunes.apple.com/search?term=\(searchTerm)&entity=podcast"
-
         
         ServiceManager.shared.fetchPodcasts(url: url) { podcasts, err in
             
@@ -59,13 +67,21 @@ class SearchController: BaseListController, UISearchBarDelegate {
                 return
             }
             
+           
+            
             guard let podcasts = podcasts?.results else {return}
             self.podcasts = podcasts
             
             DispatchQueue.main.async {
+                
+                self.label.isHidden = true
                 self.collectionView.reloadData()
+                
+                if searchTerm == "" {
+                    self.podcasts = []
+                    self.label.isHidden = false
+                }
             }
-            self.podcasts.forEach{print($0.collectionName)}
             
         }
         
@@ -83,10 +99,15 @@ class SearchController: BaseListController, UISearchBarDelegate {
         
         let podcast = podcasts[indexPath.item]
         
+        cell.imageView.sd_setImage(with: URL(string: podcast.artworkUrl600 ?? ""))
         cell.podcastName.text = podcast.collectionName
         cell.artistName.text = podcast.artistName
-        cell.imageView.sd_setImage(with: URL(string: podcast.artworkUrl600))
-        
+        if podcast.trackCount == 1 {
+            cell.trackCount.text = String("\(podcast.trackCount ?? .zero) episode")
+        } else {
+            cell.trackCount.text = String("\(podcast.trackCount ?? .zero) episodes")
+        }
+    
         return cell
     }
     
@@ -96,13 +117,12 @@ class SearchController: BaseListController, UISearchBarDelegate {
 extension SearchController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        .init(width: (view.frame.width - 48), height: 100)
+        .init(width: (view.frame.width - 48), height: 120)
     }
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 
-        return 1
+        return 0
     }
-    
 }

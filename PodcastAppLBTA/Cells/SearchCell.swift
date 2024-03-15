@@ -22,13 +22,29 @@ class SearchCell: UICollectionViewCell {
     let podcastName: UILabel = {
         let label = UILabel()
         label.text = "Podcast Name"
+        label.numberOfLines = 2
+        label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         return label
     }()
     
     let artistName: UILabel = {
         let label = UILabel()
         label.text = "Artist Name"
+        label.numberOfLines = 2
         return label
+    }()
+    
+    let trackCount: UILabel = {
+        let label = UILabel()
+        label.text = "300 episodes"
+        label.textColor = #colorLiteral(red: 0.7294118404, green: 0.7294118404, blue: 0.7294118404, alpha: 1)
+        return label
+    }()
+    
+    let separationLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
+        return view
     }()
 
     
@@ -47,15 +63,19 @@ class SearchCell: UICollectionViewCell {
         addSubview(imageView)
         imageView.anchor(top: nil, leading: leadingAnchor, bottom: nil, trailing: nil)
         imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        imageView.constrainWidth(constant: 72)
-        imageView.constrainHeight(constant: 72)
+        imageView.constrainWidth(constant: 92)
+        imageView.constrainHeight(constant: 92)
         
-        let stackView = UIStackView(arrangedSubviews: [podcastName, artistName])
+        let stackView = UIStackView(arrangedSubviews: [podcastName, artistName, trackCount])
         stackView.axis = .vertical
         addSubview(stackView)
         stackView.spacing = 4
         stackView.anchor(top: nil, leading: imageView.trailingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
         stackView.centerYAnchor.constraint(equalTo: imageView.centerYAnchor).isActive = true
+        
+        addSubview(separationLine)
+        separationLine.anchor(top: nil, leading: stackView.leadingAnchor, bottom: bottomAnchor, trailing: trailingAnchor)
+        separationLine.constrainHeight(constant: 0.5)
     }
     
     

@@ -16,9 +16,10 @@ struct Podcast: Codable {
 
 struct PodcastResult: Codable {
     
-    let artistName: String
-    let collectionName: String
-    let artworkUrl600: String
-    let trackId: Int
+    let artistName: String?
+    let collectionName: String?
+    let artworkUrl600: String?
+    let trackId: Int?
+    let trackCount: Int?
 
 }
