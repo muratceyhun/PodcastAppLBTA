@@ -146,6 +146,31 @@ class SearchController: BaseListController, UISearchBarDelegate {
         return cell
     }
     
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let selectedPodcast = podcasts[indexPath.item]
+        guard let collectionID = selectedPodcast.collectionId else {return}
+        print(collectionID)
+        
+        let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
+        ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
+            
+            if let err = err {
+                print("Failed to get episodes", err)
+                return
+            }
+            
+            
+            guard let episodes = episodes else {return}
+            episodes.results.forEach {print($0.trackName ?? "")}
+        }
+        
+        let episodesController = EpisodesController()
+        navigationController?.pushViewController(episodesController, animated: true)
+        episodesController.navigationItem.title = selectedPodcast.collectionName
+    }
+    
 }
 
 

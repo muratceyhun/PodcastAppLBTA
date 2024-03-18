@@ -20,6 +20,8 @@ struct PodcastResult: Codable {
     let collectionName: String?
     let artworkUrl600: String?
     let trackId: Int?
+    let collectionId: Int?
     let trackCount: Int?
+    let artistId: Int?
 
 }

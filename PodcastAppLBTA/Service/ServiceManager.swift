@@ -43,4 +43,31 @@ class ServiceManager {
         
         
     }
+    
+    func fetchEpisodes(url: String, completionHandler: @escaping ((Episode?, Error?) -> ())) {
+        
+        guard let url = URL(string: url) else {return}
+        
+                URLSession.shared.dataTask(with: url) { data, _, err in
+                    
+                    if let err = err {
+                        print("Failed to fetch episodes", err)
+                        completionHandler(nil, err)
+                        return
+                    }
+                    
+                    guard let data = data else {return}
+                    
+                    
+                    do {
+                        let episodes = try JSONDecoder().decode(Episode.self, from: data)
+                        completionHandler(episodes, nil)
+                    } catch let err {
+                        print("Failed to decode episode data", err)
+                        completionHandler(nil, err)
+                    }
+                    
+                }.resume()
+        
+    }
 }
