@@ -22,6 +22,7 @@ struct EpisodeResult: Codable {
     let trackName: String?
     let artworkUrl60: String?
     let trackId: Int?
+    let description: String?
     
 }
 

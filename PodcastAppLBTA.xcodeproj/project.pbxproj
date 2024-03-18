@@ -23,6 +23,7 @@
 		4361106D2BA3A3000081FAA8 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 4361106C2BA3A3000081FAA8 /* SDWebImage */; };
 		4361106F2BA894260081FAA8 /* Episode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4361106E2BA894260081FAA8 /* Episode.swift */; };
 		436110712BA898BC0081FAA8 /* EpisodesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110702BA898BC0081FAA8 /* EpisodesController.swift */; };
+		436110732BA8BBF30081FAA8 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110722BA8BBF30081FAA8 /* EpisodeCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		436110692BA37E1C0081FAA8 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		4361106E2BA894260081FAA8 /* Episode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Episode.swift; sourceTree = "<group>"; };
 		436110702BA898BC0081FAA8 /* EpisodesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesController.swift; sourceTree = "<group>"; };
+		436110722BA8BBF30081FAA8 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				436110612BA350890081FAA8 /* SearchCell.swift */,
+				436110722BA8BBF30081FAA8 /* EpisodeCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 				4361106A2BA37E1C0081FAA8 /* Podcast.swift in Sources */,
 				436110442BA1E1E30081FAA8 /* SceneDelegate.swift in Sources */,
 				436110712BA898BC0081FAA8 /* EpisodesController.swift in Sources */,
+				436110732BA8BBF30081FAA8 /* EpisodeCell.swift in Sources */,
 				436110562BA1ED010081FAA8 /* SearchController.swift in Sources */,
 				436110672BA37D1B0081FAA8 /* ServiceManager.swift in Sources */,
 			);

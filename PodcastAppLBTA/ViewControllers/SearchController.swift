@@ -153,6 +153,10 @@ class SearchController: BaseListController, UISearchBarDelegate {
         guard let collectionID = selectedPodcast.collectionId else {return}
         print(collectionID)
         
+        let episodesController = EpisodesController()
+        navigationController?.pushViewController(episodesController, animated: true)
+        episodesController.navigationItem.title = selectedPodcast.collectionName
+        
         let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
         ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
             
@@ -161,14 +165,14 @@ class SearchController: BaseListController, UISearchBarDelegate {
                 return
             }
             
-            
             guard let episodes = episodes else {return}
-            episodes.results.forEach {print($0.trackName ?? "")}
+            episodesController.episodes = episodes
+            DispatchQueue.main.async {
+                episodesController.collectionView.reloadData()
+            }
         }
         
-        let episodesController = EpisodesController()
-        navigationController?.pushViewController(episodesController, animated: true)
-        episodesController.navigationItem.title = selectedPodcast.collectionName
+        
     }
     
 }
