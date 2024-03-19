@@ -12,7 +12,8 @@ class EpisodesController: BaseListController {
     
     let cellID = "cellID"
     
-    var episodes: Episode?
+//    var episodes: Episode?
+    var episodes = [EpisodeResult]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,14 +25,15 @@ class EpisodesController: BaseListController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! EpisodeCell
-        let episode = episodes?.results[indexPath.item]
+        let episode = episodes[indexPath.item]
         cell.episode = episode
         return cell
     }
 
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return episodes?.results.count ?? .zero
+        
+        return episodes.count
     }
   
 }

@@ -80,8 +80,6 @@ class SearchController: BaseListController, UISearchBarDelegate {
     
     fileprivate func fetchPodcastsWithSearchTerm(searchTerm: String) {
         
-        
-        
         let searchTerm = searchTerm.replacingOccurrences(of: " ", with: "+")
         
         let url = "https://itunes.apple.com/search?term=\(searchTerm)&entity=podcast"
@@ -96,7 +94,6 @@ class SearchController: BaseListController, UISearchBarDelegate {
             
 
             guard let podcasts = podcasts?.results else {return}
-
 
             self.podcasts = podcasts
 
@@ -151,7 +148,6 @@ class SearchController: BaseListController, UISearchBarDelegate {
         
         let selectedPodcast = podcasts[indexPath.item]
         guard let collectionID = selectedPodcast.collectionId else {return}
-        print(collectionID)
         
         let episodesController = EpisodesController()
         navigationController?.pushViewController(episodesController, animated: true)
@@ -160,13 +156,25 @@ class SearchController: BaseListController, UISearchBarDelegate {
         let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
         ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
             
+            var filteredEpisodes = [EpisodeResult]()
+
             if let err = err {
                 print("Failed to get episodes", err)
                 return
             }
             
-            guard let episodes = episodes else {return}
-            episodesController.episodes = episodes
+            guard let episodesItems = episodes?.results else {return}
+            
+            episodesItems.forEach { item in
+                if item.episodeContentType == "audio" {
+                    filteredEpisodes.append(item)
+                } else {
+                    return
+                }
+            }
+            
+            
+            episodesController.episodes = filteredEpisodes
             DispatchQueue.main.async {
                 episodesController.collectionView.reloadData()
             }
@@ -176,6 +184,8 @@ class SearchController: BaseListController, UISearchBarDelegate {
     }
     
 }
+
+
 
 
 extension SearchController: UICollectionViewDelegateFlowLayout {

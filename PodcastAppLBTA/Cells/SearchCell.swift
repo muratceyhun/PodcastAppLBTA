@@ -15,13 +15,11 @@ class SearchCell: UICollectionViewCell {
         let iw = UIImageView()
         iw.layer.cornerRadius = 12
         iw.clipsToBounds = true
-        iw.backgroundColor = .yellow
         return iw
     }()
     
     let podcastName: UILabel = {
         let label = UILabel()
-        label.text = "Podcast Name"
         label.numberOfLines = 2
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         return label
@@ -29,14 +27,12 @@ class SearchCell: UICollectionViewCell {
     
     let artistName: UILabel = {
         let label = UILabel()
-        label.text = "Artist Name"
         label.numberOfLines = 2
         return label
     }()
     
     let trackCount: UILabel = {
         let label = UILabel()
-        label.text = "300 episodes"
         label.textColor = #colorLiteral(red: 0.7294118404, green: 0.7294118404, blue: 0.7294118404, alpha: 1)
         return label
     }()

@@ -12,7 +12,7 @@ class EpisodeCell: UICollectionViewCell {
     var episode: EpisodeResult? {
         didSet {
             
-            imageView.sd_setImage(with: URL(string: episode?.artworkUrl60 ?? ""))
+            imageView.sd_setImage(with: URL(string: episode?.artworkUrl600 ?? ""))
             episodeName.text = episode?.trackName ?? ""
             episodeDescription.text = episode?.description ?? ""
             
@@ -23,7 +23,6 @@ class EpisodeCell: UICollectionViewCell {
     
     let imageView: UIImageView = {
         let iw = UIImageView()
-        iw.backgroundColor = .black
         iw.layer.cornerRadius = 12
         iw.clipsToBounds = true
         return iw
@@ -31,21 +30,18 @@ class EpisodeCell: UICollectionViewCell {
     
     let dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "Feb 08, 2018"
         return label
     }()
     
     
     let episodeName: UILabel = {
         let label = UILabel()
-        label.text = "Episode Name"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         return label
     }()
     
     let episodeDescription: UILabel = {
         let label = UILabel()
-        label.text = "Description......Description....."
         return label
     }()
     
