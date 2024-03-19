@@ -25,6 +25,7 @@ struct EpisodeResult: Codable {
     let trackId: Int?
     let description: String?
     let episodeContentType: String?
+    let releaseDate: String?
     
 }
 

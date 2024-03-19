@@ -16,6 +16,13 @@ class EpisodeCell: UICollectionViewCell {
             episodeName.text = episode?.trackName ?? ""
             episodeDescription.text = episode?.description ?? ""
             
+    //MARK: - Date Formatter
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            dateFormatter.locale = Locale(identifier: "en_US")
+            let date: Date = dateFormatter.date(from: episode?.releaseDate ?? "") ?? Date()
+            dateFormatter.dateFormat = "MMMM d, yyyy"
+            dateLabel.text = dateFormatter.string(from: date)
             
         }
     }
