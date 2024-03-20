@@ -153,6 +153,11 @@ class SearchController: BaseListController, UISearchBarDelegate {
         navigationController?.pushViewController(episodesController, animated: true)
         episodesController.navigationItem.title = selectedPodcast.collectionName
         
+        
+        
+        // For artistName
+        episodesController.podcast = selectedPodcast
+        
         let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
         ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
             

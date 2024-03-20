@@ -19,6 +19,7 @@ struct Episode: Codable {
 
 struct EpisodeResult: Codable {
     
+    let artistName: String?
     let trackName: String?
     let artworkUrl60: String?
     let artworkUrl600: String?

@@ -44,6 +44,7 @@ class EpisodeCell: UICollectionViewCell {
     let episodeName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        label.numberOfLines = 0
         return label
     }()
     
@@ -81,7 +82,7 @@ class EpisodeCell: UICollectionViewCell {
         addSubview(verticalStackView)
         verticalStackView.axis = .vertical
         verticalStackView.anchor(top: imageView.topAnchor, leading: imageView.trailingAnchor, bottom: imageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
-        verticalStackView.distribution = .fillEqually
+        verticalStackView.distribution = .fillProportionally
     }
     
     
