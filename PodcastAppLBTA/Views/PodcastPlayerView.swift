@@ -40,6 +40,22 @@ class PodcastPlayerView: UIView {
         return slider
     }()
     
+    let time1: UILabel = {
+        let name = UILabel()
+        name.text = "01:47"
+        name.numberOfLines = 0
+        name.textAlignment = .left
+        return name
+    }()
+    
+    let time2: UILabel = {
+        let name = UILabel()
+        name.text = "00:00:00"
+        name.numberOfLines = 0
+        name.textAlignment = .left
+        return name
+    }()
+    
     
     let podcastName: UILabel = {
         let name = UILabel()
@@ -87,6 +103,20 @@ class PodcastPlayerView: UIView {
         return slider
     }()
     
+    let volumeMin: UIImageView = {
+        let iw = UIImageView()
+        iw.image = UIImage(systemName: "speaker.fill")
+        return iw
+    }()
+    
+    let volumeMax: UIImageView = {
+        let iw = UIImageView()
+        iw.image = UIImage(systemName: "speaker.wave.2.fill")
+        return iw
+    }()
+    
+    
+    
     
     lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
@@ -112,8 +142,14 @@ class PodcastPlayerView: UIView {
         addSubview(timeSlider)
         timeSlider.anchor(top: imageView.bottomAnchor, leading: imageView.leadingAnchor, bottom: nil, trailing: imageView.trailingAnchor, padding: .init(top: 20, left: 0, bottom: 0, right: 0))
         
+        addSubview(time1)
+        time1.anchor(top: timeSlider.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: 4, left: 0, bottom: 0, right: 0))
+        
+        addSubview(time2)
+        time2.anchor(top: timeSlider.bottomAnchor, leading: nil, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 0, right: 0))
+        
         addSubview(podcastName)
-        podcastName.anchor(top: timeSlider.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 36, left: 0, bottom: 0, right: 0))
+        podcastName.anchor(top: timeSlider.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 48, left: 0, bottom: 0, right: 0))
         
         addSubview(artistName)
         artistName.anchor(top: podcastName.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 10, left: 0, bottom: 0, right: 0))
@@ -127,11 +163,13 @@ class PodcastPlayerView: UIView {
         stackView.constrainHeight(constant: 120)
         
         
-        addSubview(volumeSlider)
-        volumeSlider.anchor(top: stackView.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 30, left: 0, bottom: 0, right: 0))
-        volumeSlider.constrainHeight(constant: 40)
+        let volumeStackView = UIStackView(arrangedSubviews: [volumeMin, volumeSlider, volumeMax])
+        volumeStackView.spacing = 12
         
+        addSubview(volumeStackView)
+        volumeStackView.anchor(top: stackView.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor)
         
+
         addSubview(closeButton)
         closeButton.anchor(top: safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 40, left: 0, bottom: 0, right: 40))
         closeButton.constrainHeight(constant: 64)
