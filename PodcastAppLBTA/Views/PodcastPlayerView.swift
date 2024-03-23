@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import FeedKit
 
 
 class PodcastPlayerView: UIView {
     
     
-    var podcast: PodcastResult? {
+    var episode: RSSFeedItem? {
         didSet {
-            artistName.text = podcast?.artistName
+            
+            imageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
+            podcastName.text = episode?.title
+            artistName.text = episode?.iTunes?.iTunesAuthor 
         }
     }
     

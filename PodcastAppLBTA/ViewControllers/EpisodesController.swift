@@ -43,20 +43,22 @@ class EpisodesController: BaseListController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         
-//        let keyWindow = UIApplication.shared.connectedScenes
-//                .filter({$0.activationState == .foregroundActive})
-//                .compactMap({$0 as? UIWindowScene})
-//                .first?.windows
-//                .filter({$0.isKeyWindow}).first
-//        
-//        let podcastPlayerView = PodcastPlayerView()
-//        podcastPlayerView.frame = self.view.frame
-//        keyWindow?.addSubview(podcastPlayerView)
-//        
-//        let episode = episodes[indexPath.item]
-//        
-//        podcastPlayerView.podcast = podcast
-//        podcastPlayerView.episode = episode
+        let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        
+        let podcastPlayerView = PodcastPlayerView()
+        podcastPlayerView.frame = self.view.frame
+        keyWindow?.addSubview(podcastPlayerView)
+        
+        let episode = episodes[indexPath.item]
+        
+        podcastPlayerView.episode = episode
+//        DispatchQueue.main.async {
+//            podcastPlayerView.cont
+//        }
         
     }
 
