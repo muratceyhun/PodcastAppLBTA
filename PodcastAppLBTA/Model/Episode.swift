@@ -8,27 +8,42 @@
 import Foundation
 
 
-
-struct Episode: Codable {
+struct Episode {
     
-    let resultCount: Int
-    let results: [EpisodeResult]
-    
-}
-
-
-struct EpisodeResult: Codable {
-    
-    let artistName: String?
-    let trackName: String?
-    let artworkUrl60: String?
-    let artworkUrl600: String?
-    let trackId: Int?
+    let name: String?
     let description: String?
-    let episodeContentType: String?
-    let releaseDate: String?
+    let pubDate: String?
+    let imageUrl: String?
     
 }
+
+
+
+//struct Episode: Codable {
+//
+////    let resultCount: Int
+//    let results: [EpisodeResult]
+//
+//}
+//
+//
+//struct EpisodeResult: Codable {
+//
+//    let artistName: String?
+//    let trackName: String?
+//    let artworkUrl60: String?
+//    let artworkUrl600: String?
+//    let trackId: Int?
+//    let description: String?
+//    let episodeContentType: String?
+//    let releaseDate: String?
+//    let feedUrl: String?
+//
+//}
+
+
+
+
 
 
 

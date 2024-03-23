@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "feedkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nmdias/FeedKit",
+      "state" : {
+        "branch" : "master",
+        "revision" : "fb75f2a142f658c773953ab1a6885154a8624abb"
+      }
+    },
+    {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage",

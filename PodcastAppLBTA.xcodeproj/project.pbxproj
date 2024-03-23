@@ -25,6 +25,7 @@
 		436110712BA898BC0081FAA8 /* EpisodesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110702BA898BC0081FAA8 /* EpisodesController.swift */; };
 		436110732BA8BBF30081FAA8 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110722BA8BBF30081FAA8 /* EpisodeCell.swift */; };
 		436110762BAB58190081FAA8 /* PodcastPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110752BAB58190081FAA8 /* PodcastPlayerView.swift */; };
+		4361107B2BAF49CE0081FAA8 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4361107A2BAF49CE0081FAA8 /* FeedKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4361106D2BA3A3000081FAA8 /* SDWebImage in Frameworks */,
+				4361107B2BAF49CE0081FAA8 /* FeedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +178,7 @@
 			name = PodcastAppLBTA;
 			packageProductDependencies = (
 				4361106C2BA3A3000081FAA8 /* SDWebImage */,
+				4361107A2BAF49CE0081FAA8 /* FeedKit */,
 			);
 			productName = PodcastAppLBTA;
 			productReference = 4361103E2BA1E1E30081FAA8 /* PodcastAppLBTA.app */;
@@ -207,6 +210,7 @@
 			mainGroup = 436110352BA1E1E30081FAA8;
 			packageReferences = (
 				4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				436110792BAF49CE0081FAA8 /* XCRemoteSwiftPackageReference "FeedKit" */,
 			);
 			productRefGroup = 4361103F2BA1E1E30081FAA8 /* Products */;
 			projectDirPath = "";
@@ -466,6 +470,14 @@
 				kind = branch;
 			};
 		};
+		436110792BAF49CE0081FAA8 /* XCRemoteSwiftPackageReference "FeedKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nmdias/FeedKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -473,6 +485,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */;
 			productName = SDWebImage;
+		};
+		4361107A2BAF49CE0081FAA8 /* FeedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 436110792BAF49CE0081FAA8 /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = FeedKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

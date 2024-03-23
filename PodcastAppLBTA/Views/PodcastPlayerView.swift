@@ -17,14 +17,7 @@ class PodcastPlayerView: UIView {
         }
     }
     
-    
-    var episode: EpisodeResult? {
-        
-        didSet {
-            imageView.sd_setImage(with: URL(string: episode?.artworkUrl600 ?? ""))
-            podcastName.text = episode?.trackName
-        }
-    }
+
     
     
     let imageView: UIImageView = {

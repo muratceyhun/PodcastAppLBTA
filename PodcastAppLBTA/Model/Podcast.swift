@@ -10,7 +10,7 @@ import Foundation
 
 struct Podcast: Codable {
     
-    let resultCount: Int
+//    let resultCount: Int
     let results: [PodcastResult]
 }
 
@@ -23,5 +23,6 @@ struct PodcastResult: Codable {
     let collectionId: Int?
     let trackCount: Int?
     let artistId: Int?
+    let feedUrl: String?
 
 }

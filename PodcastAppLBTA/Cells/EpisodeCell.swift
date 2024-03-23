@@ -6,30 +6,35 @@
 //
 
 import UIKit
+import FeedKit
 
 class EpisodeCell: UICollectionViewCell {
     
-    var episode: EpisodeResult? {
+    var episode: RSSFeedItem? {
         didSet {
             
-            imageView.sd_setImage(with: URL(string: episode?.artworkUrl600 ?? ""))
-            episodeName.text = episode?.trackName ?? ""
-            episodeDescription.text = episode?.description ?? ""
-            
-    //MARK: - Date Formatter
+            guard let imageUrl = episode?.iTunes?.iTunesImage?.attributes?.href else {return}
+            print("-----")
+            print(imageUrl)
+            imageView.sd_setImage(with: URL(string: imageUrl))
+            episodeName.text = episode?.title
+            episodeDescription.text = episode?.description
+
+//    MARK: - Date Formatter
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-            dateFormatter.locale = Locale(identifier: "en_US")
-            let date: Date = dateFormatter.date(from: episode?.releaseDate ?? "") ?? Date()
             dateFormatter.dateFormat = "MMMM d, yyyy"
-            dateLabel.text = dateFormatter.string(from: date)
-            
+            dateFormatter.locale = Locale(identifier: "en_US")
+            dateLabel.text = dateFormatter.string(from: episode?.pubDate ?? Date())
+
         }
     }
+    
+
     
     
     let imageView: UIImageView = {
         let iw = UIImageView()
+        iw.backgroundColor = .red
         iw.layer.cornerRadius = 12
         iw.clipsToBounds = true
         return iw
@@ -37,12 +42,14 @@ class EpisodeCell: UICollectionViewCell {
     
     let dateLabel: UILabel = {
         let label = UILabel()
+        label.text = "12.11.2020"
         return label
     }()
     
     
     let episodeName: UILabel = {
         let label = UILabel()
+        label.text = "Episode Name"
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
         label.numberOfLines = 0
         return label
@@ -50,6 +57,7 @@ class EpisodeCell: UICollectionViewCell {
     
     let episodeDescription: UILabel = {
         let label = UILabel()
+        label.text = "Description"
         return label
     }()
     

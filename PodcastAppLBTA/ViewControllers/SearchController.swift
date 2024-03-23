@@ -7,6 +7,7 @@
 
 import UIKit
 import SDWebImage
+import FeedKit
 
 
 class SearchController: BaseListController, UISearchBarDelegate {
@@ -144,47 +145,125 @@ class SearchController: BaseListController, UISearchBarDelegate {
     }
     
     
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let selectedPodcast = podcasts[indexPath.item]
+        print(selectedPodcast.collectionId)
         guard let collectionID = selectedPodcast.collectionId else {return}
         
         let episodesController = EpisodesController()
         navigationController?.pushViewController(episodesController, animated: true)
         episodesController.navigationItem.title = selectedPodcast.collectionName
         
+        guard let feedUrl = selectedPodcast.feedUrl else {return}
+        print(feedUrl)
+        
+        guard let url = URL(string: feedUrl) else {return}
         
         
-        // For artistName
-        episodesController.podcast = selectedPodcast
+        let parser = FeedParser(URL: url)
         
-        let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
-        ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
+        parser.parseAsync { result in
             
-            var filteredEpisodes = [EpisodeResult]()
-
-            if let err = err {
-                print("Failed to get episodes", err)
-                return
-            }
             
-            guard let episodesItems = episodes?.results else {return}
-            
-            episodesItems.forEach { item in
-                if item.episodeContentType == "audio" {
-                    filteredEpisodes.append(item)
-                } else {
-                    return
+            switch result {
+            case .success(let feed):
+                
+                switch feed {
+                case let .rss(feed):
+                    var episodes = [RSSFeedItem]()
+                    
+                    feed.items?.forEach({ episode in
+                        episodes.append(episode)
+                    })
+                    episodesController.episodes = episodes
+                    DispatchQueue.main.async {
+                        episodesController.collectionView.reloadData()
+                    }
+                    break
+                case .atom(_):
+                    break
+                case .json(_):
+                    break
                 }
-            }
-            
-            
-            episodesController.episodes = filteredEpisodes
-            DispatchQueue.main.async {
-                episodesController.collectionView.reloadData()
+                
+                
+                
+            case .failure(let err):
+                print(err)
             }
         }
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+       
+                
+        // For artist name
+        
+        
+//        episodesController.podcast = selectedPodcast
+//
+//        let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
+//        ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
+//
+//            var filteredEpisodes = [EpisodeResult]()
+//
+//            if let err = err {
+//                print("Failed to get episodes", err)
+//                return
+//            }
+//
+//            guard let episodesItems = episodes?.results else {return}
+//
+//            episodesItems.forEach { item in
+//                if item.episodeContentType == "audio" {
+//                    filteredEpisodes.append(item)
+//                } else {
+//                    return
+//                }
+//            }
+//
+//
+//            episodesController.episodes = filteredEpisodes
+//            DispatchQueue.main.async {
+//                episodesController.collectionView.reloadData()
+//            }
+//        }
         
     }
     
