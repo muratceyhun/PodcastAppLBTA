@@ -25,12 +25,11 @@ class PodcastPlayerView: UIView {
     }
     
     fileprivate func playEpisode() {
-        print("Episode is playing at", episode?.enclosure?.attributes?.url)
+        print("Episode is playing at", episode?.enclosure?.attributes?.url ?? "")
         
         guard let url = URL(string: episode?.enclosure?.attributes?.url ?? "") else {return}
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
-//        player.play()
         
     }
     
@@ -58,7 +57,7 @@ class PodcastPlayerView: UIView {
     
     let time1: UILabel = {
         let name = UILabel()
-        name.text = "01:47"
+        name.text = "00:00"
         name.numberOfLines = 0
         name.textAlignment = .left
         return name
@@ -114,15 +113,44 @@ class PodcastPlayerView: UIView {
             shrinkImageView()
         } else {
             player.play()
-            enlargeImageView()
+            episodeTime()
             playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+            enlargeImageView()
         }
+    }
+    
+    fileprivate func episodeTime() {
+        
+        let interval = CMTimeMake(value: 1, timescale: 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+            self.time1.text = time.toDisplayString()
+            self.updateTimeSlider()
+
+        }
+
+        guard let durationTime = player.currentItem?.duration else {return}
+        time2.text = durationTime.toDisplayString()
+    }
+    
+    fileprivate func updateTimeSlider() {
+        
+        let currentTime = CMTimeGetSeconds(player.currentTime())
+        let duration = CMTimeGetSeconds(player.currentItem?.duration ?? CMTime())
+        let percentage = currentTime / duration
+
+        timeSlider.minimumValue = 0
+        timeSlider.maximumValue = 1
+        timeSlider.value = Float(percentage)
+        
+        
+        
     }
     
     
     fileprivate func shrinkImageView() {
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7) {
+            
             self.imageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         }
         

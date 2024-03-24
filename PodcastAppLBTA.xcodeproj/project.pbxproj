@@ -26,6 +26,7 @@
 		436110732BA8BBF30081FAA8 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110722BA8BBF30081FAA8 /* EpisodeCell.swift */; };
 		436110762BAB58190081FAA8 /* PodcastPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110752BAB58190081FAA8 /* PodcastPlayerView.swift */; };
 		4361107B2BAF49CE0081FAA8 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4361107A2BAF49CE0081FAA8 /* FeedKit */; };
+		43FC261B2BB0980700704CB0 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FC261A2BB0980700704CB0 /* CMTime.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		436110702BA898BC0081FAA8 /* EpisodesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesController.swift; sourceTree = "<group>"; };
 		436110722BA8BBF30081FAA8 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		436110752BAB58190081FAA8 /* PodcastPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayerView.swift; sourceTree = "<group>"; };
+		43FC261A2BB0980700704CB0 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				4361105B2BA1EED00081FAA8 /* BaseListController.swift */,
 				436110632BA351000081FAA8 /* UIView+Layout.swift */,
+				43FC261A2BB0980700704CB0 /* CMTime.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 				436110422BA1E1E30081FAA8 /* AppDelegate.swift in Sources */,
 				436110762BAB58190081FAA8 /* PodcastPlayerView.swift in Sources */,
 				436110582BA1ED340081FAA8 /* FavoritesController.swift in Sources */,
+				43FC261B2BB0980700704CB0 /* CMTime.swift in Sources */,
 				4361105C2BA1EED00081FAA8 /* BaseListController.swift in Sources */,
 				436110642BA351000081FAA8 /* UIView+Layout.swift in Sources */,
 				4361105A2BA1ED580081FAA8 /* DownloadsController.swift in Sources */,
