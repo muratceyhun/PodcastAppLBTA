@@ -20,6 +20,7 @@ class PodcastPlayerView: UIView {
             podcastName.text = episode?.title
             artistName.text = episode?.iTunes?.iTunesAuthor
             playEpisode()
+            shrinkImageView()
         }
     }
     
@@ -110,11 +111,31 @@ class PodcastPlayerView: UIView {
         if player.timeControlStatus == .playing {
             player.pause()
             playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+            shrinkImageView()
         } else {
             player.play()
+            enlargeImageView()
             playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
         }
     }
+    
+    
+    fileprivate func shrinkImageView() {
+        
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7) {
+            self.imageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+        }
+        
+    }
+    
+    fileprivate func enlargeImageView() {
+        
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7) {
+            self.imageView.transform = .identity
+        }
+    }
+    
+
     
     let forwardButton: UIButton = {
         let button = UIButton(type: .system)
