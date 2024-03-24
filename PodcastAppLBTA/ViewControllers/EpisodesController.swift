@@ -10,12 +10,9 @@ import FeedKit
 
 class EpisodesController: BaseListController {
     
-    
     let cellID = "cellID"
     
-    
     var episodes = [RSSFeedItem]()
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,9 +53,6 @@ class EpisodesController: BaseListController {
         let episode = episodes[indexPath.item]
         
         podcastPlayerView.episode = episode
-//        DispatchQueue.main.async {
-//            podcastPlayerView.cont
-//        }
         
     }
 

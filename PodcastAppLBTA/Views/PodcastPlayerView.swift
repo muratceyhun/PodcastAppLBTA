@@ -7,6 +7,7 @@
 
 import UIKit
 import FeedKit
+import AVKit
 
 
 class PodcastPlayerView: UIView {
@@ -17,10 +18,27 @@ class PodcastPlayerView: UIView {
             
             imageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
             podcastName.text = episode?.title
-            artistName.text = episode?.iTunes?.iTunesAuthor 
+            artistName.text = episode?.iTunes?.iTunesAuthor
+            playEpisode()
         }
     }
     
+    fileprivate func playEpisode() {
+        print("Episode is playing at", episode?.enclosure?.attributes?.url)
+        
+        guard let url = URL(string: episode?.enclosure?.attributes?.url ?? "") else {return}
+        let playerItem = AVPlayerItem(url: url)
+        player.replaceCurrentItem(with: playerItem)
+//        player.play()
+        
+    }
+    
+    
+    let player: AVPlayer = {
+        let avPlayer = AVPlayer()
+        avPlayer.automaticallyWaitsToMinimizeStalling = false
+        return avPlayer
+    }()
 
     
     
@@ -79,13 +97,24 @@ class PodcastPlayerView: UIView {
         return button
     }()
         
-    let playPauseButton: UIButton = {
+    lazy var playPauseButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "pause.fill"), for: .normal)
-//        button.constrainWidth(constant: 64)
-//        button.constrainHeight(constant: 64)
+        button.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        button.addTarget(self, action: #selector(handlePlayPause), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handlePlayPause() {
+        print("Play/Pause")
+        
+        if player.timeControlStatus == .playing {
+            player.pause()
+            playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        } else {
+            player.play()
+            playPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        }
+    }
     
     let forwardButton: UIButton = {
         let button = UIButton(type: .system)
