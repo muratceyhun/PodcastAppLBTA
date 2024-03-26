@@ -25,9 +25,15 @@ class SearchController: BaseListController, UISearchBarDelegate {
         return label
     }()
     
-    let aiv = UIActivityIndicatorView(style: .large)
-
     
+    let activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .large)
+        ai.color = .darkGray
+        ai.hidesWhenStopped = true
+        return ai
+    }()
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,17 +42,16 @@ class SearchController: BaseListController, UISearchBarDelegate {
         label.fillSuperview()
         setupCell()
         setupSearchController()
+        setupActivityIndicator()
         
     }
     
     fileprivate func setupActivityIndicator() {
-        
-        view.addSubview(aiv)
-        aiv.fillSuperview(padding: .init(top: 90, left: 0, bottom: 0, right: 0))
-        aiv.startAnimating()
-
+        view.addSubview(activityIndicator)
+        activityIndicator.fillSuperview(padding: .init(top: 90, left: 0, bottom: 0, right: 0))
     }
     
+ 
     
     fileprivate func setupCell() {
         
@@ -61,12 +66,41 @@ class SearchController: BaseListController, UISearchBarDelegate {
         searchController.searchBar.delegate = self
     }
     
+    
+    var timer: Timer?
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        aiv.startAnimating()
-        fetchPodcastsWithSearchTerm(searchTerm: searchText)
-        setupActivityIndicator()
-
+        activityIndicator.startAnimating()
+        
+        timer?.invalidate()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
+            ServiceManager.shared.fetchPodcasts(searchText: searchText) { podcasts, err in
+                
+                if let err = err {
+                    print("Failed to fetch podcasts", err)
+                    return
+                }
+                
+                guard let podcasts = podcasts?.results else {return}
+                self.podcasts = podcasts
+                DispatchQueue.main.async {
+                    
+                    self.label.isHidden = true
+                    self.collectionView.reloadData()
+                    
+                    if searchText == "" {
+                        self.activityIndicator.stopAnimating()
+                        self.podcasts = []
+                        self.label.isHidden = false
+                        self.collectionView.reloadData()
+                        return
+                    }
+                    
+                }
+            }
+        })
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -74,55 +108,16 @@ class SearchController: BaseListController, UISearchBarDelegate {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, animations: {
             self.podcasts = []
             self.label.isHidden = false
-            self.aiv.stopAnimating()
             self.collectionView.reloadData()
         })
     }
     
-    fileprivate func fetchPodcastsWithSearchTerm(searchTerm: String) {
-        
-        let searchTerm = searchTerm.replacingOccurrences(of: " ", with: "+")
-        
-        let url = "https://itunes.apple.com/search?term=\(searchTerm)&entity=podcast"
-        
-        
-        ServiceManager.shared.fetchPodcasts(url: url) { podcasts, err in
-            
-            if let err = err {
-                print("Failed to fetch podcasts", err)
-                return
-            }
-            
-
-            guard let podcasts = podcasts?.results else {return}
-
-            self.podcasts = podcasts
-
-            DispatchQueue.main.async {
-            
-                self.label.isHidden = true
-                self.collectionView.reloadData()
-                
-                if searchTerm == "" {
-                    self.podcasts = []
-                    self.label.isHidden = false
-                    self.aiv.stopAnimating()
-                    self.collectionView.reloadData()
-                    return
-                }
-                
-            }
-        }
-    }
-    
-
-    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if podcasts.count != 0 {
-            aiv.stopAnimating()
+            activityIndicator.stopAnimating()
         }
-
+    
         return podcasts.count
     }
     
@@ -162,37 +157,42 @@ class SearchController: BaseListController, UISearchBarDelegate {
         guard let url = URL(string: feedUrl) else {return}
         
         
-        let parser = FeedParser(URL: url)
-        
-        parser.parseAsync { result in
+        DispatchQueue.global(qos: .background).async {
+            let parser = FeedParser(URL: url)
             
-            
-            switch result {
-            case .success(let feed):
+            parser.parseAsync { result in
                 
-                switch feed {
-                case let .rss(feed):
-                    var episodes = [RSSFeedItem]()
+                
+                switch result {
+                case .success(let feed):
                     
-                    feed.items?.forEach({ episode in
-                        episodes.append(episode)
-                    })
-                    episodesController.episodes = episodes
-                    DispatchQueue.main.async {
-                        episodesController.collectionView.reloadData()
+                    switch feed {
+                    case let .rss(feed):
+                        var episodes = [RSSFeedItem]()
+                        
+                        feed.items?.forEach({ episode in
+                            episodes.append(episode)
+                        })
+                        episodesController.episodes = episodes
+                        DispatchQueue.main.async {
+                            episodesController.collectionView.reloadData()
+                        }
+                        break
+                    case .atom(_):
+                        break
+                    case .json(_):
+                        break
                     }
-                    break
-                case .atom(_):
-                    break
-                case .json(_):
-                    break
+                    
+                    
+                    
+                case .failure(let err):
+                    print(err)
                 }
-                
-                
-                
-            case .failure(let err):
-                print(err)
-            }
+        }
+        
+        
+        
         }
         
         

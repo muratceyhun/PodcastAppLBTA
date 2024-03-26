@@ -150,9 +150,9 @@ class PodcastPlayerView: UIView {
     fileprivate func episodeTime() {
         
         let interval = CMTimeMake(value: 1, timescale: 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
-            self.time1.text = time.toDisplayString()
-            self.updateTimeSlider()
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+            self?.time1.text = time.toDisplayString()
+            self?.updateTimeSlider()
 
         }
 
@@ -176,7 +176,6 @@ class PodcastPlayerView: UIView {
     fileprivate func shrinkImageView() {
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7) {
-            
             self.imageView.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
         }
         
@@ -292,6 +291,10 @@ class PodcastPlayerView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("Deinit !!!!")
     }
     
 }

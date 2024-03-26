@@ -19,14 +19,35 @@ class EpisodesController: BaseListController {
         
         collectionView.backgroundColor = .white
         collectionView.register(EpisodeCell.self, forCellWithReuseIdentifier: cellID)
-        
+        setupActivityIndicator()
     }
     
+    let activityIndicator = UIActivityIndicatorView(style: .large)
+
+    
+    fileprivate func setupActivityIndicator() {
+        
+        activityIndicator.startAnimating()
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.color = .darkGray
+        view.addSubview(activityIndicator)
+        activityIndicator.fillSuperview()
+    }
+
+    
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if episodes.isEmpty {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
         
         return episodes.count
         
     }
+    
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! EpisodeCell
@@ -55,10 +76,6 @@ class EpisodesController: BaseListController {
         podcastPlayerView.episode = episode
         
     }
-
-    
- 
-  
 }
 
 

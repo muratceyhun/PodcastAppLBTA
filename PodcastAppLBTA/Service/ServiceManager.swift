@@ -11,10 +11,11 @@ class ServiceManager {
     
     static let shared = ServiceManager()
     
-    func fetchPodcasts(url: String, completion: @escaping ((Podcast?, Error?) -> ())) {
+    func fetchPodcasts(searchText: String, completion: @escaping ((Podcast?, Error?) -> ())) {
         
+        let urlString = "https://itunes.apple.com/search?term=\(searchText)&entity=podcast"
 
-        guard let url = URL(string: url) else {return}
+        guard let url = URL(string: urlString) else {return}
         
                 URLSession.shared.dataTask(with: url) { data, _, err in
                     
@@ -38,9 +39,6 @@ class ServiceManager {
         
                     
                 }.resume()
-        
-        
-        
-        
+    
     }
 }
