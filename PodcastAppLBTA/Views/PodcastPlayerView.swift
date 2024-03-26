@@ -52,8 +52,24 @@ class PodcastPlayerView: UIView {
     
     let timeSlider: UISlider = {
         let slider = UISlider()
+        slider.addTarget(self, action: #selector(handleTimeSlider), for: .valueChanged)
         return slider
     }()
+    
+    
+    @objc func handleTimeSlider() {
+        
+        let percentage = timeSlider.value
+        
+        guard let duration = player.currentItem?.duration else {return}
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
+        let seekTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+        player.seek(to: seekTime)
+        
+        
+        
+    }
     
     let time1: UILabel = {
         let name = UILabel()
@@ -92,10 +108,22 @@ class PodcastPlayerView: UIView {
     let backwardButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "gobackward.15"), for: .normal)
-//        button.constrainWidth(constant: 64)
-//        button.constrainHeight(constant: 64)
+        button.addTarget(self, action: #selector(handleGoBack15), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handleGoBack15() {
+        
+        goOrBackFitteen(-15)
+        
+    }
+    
+    fileprivate func goOrBackFitteen(_ sec: Int64) {
+        let currentTime = player.currentTime()
+        let fifteenSec = CMTimeMake(value: sec, timescale: 1)
+        let seekTime = CMTimeAdd(currentTime, fifteenSec)
+        player.seek(to: seekTime)
+    }
         
     lazy var playPauseButton: UIButton = {
         let button = UIButton(type: .system)
@@ -141,9 +169,7 @@ class PodcastPlayerView: UIView {
         timeSlider.minimumValue = 0
         timeSlider.maximumValue = 1
         timeSlider.value = Float(percentage)
-        
-        
-        
+    
     }
     
     
@@ -164,19 +190,33 @@ class PodcastPlayerView: UIView {
     }
     
 
-    
     let forwardButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "goforward.15"), for: .normal)
-//        button.constrainWidth(constant: 64)
-//        button.constrainHeight(constant: 64)
+        button.addTarget(self, action: #selector(handleGo15), for: .touchUpInside)
         return button
     }()
     
+    @objc func handleGo15() {
+        
+        goOrBackFitteen(15)
+        
+    }
+    
     let volumeSlider: UISlider = {
         let slider = UISlider()
+        slider.addTarget(self, action: #selector(handleVolume), for: .valueChanged)
+        slider.minimumValue = 0
+        slider.maximumValue = 1
+        slider.value = 0.5
         return slider
     }()
+    
+    @objc func handleVolume() {
+    
+        player.volume = volumeSlider.value
+        
+    }
     
     let volumeMin: UIImageView = {
         let iw = UIImageView()
@@ -189,9 +229,6 @@ class PodcastPlayerView: UIView {
         iw.image = UIImage(systemName: "speaker.wave.2.fill")
         return iw
     }()
-    
-    
-    
     
     lazy var closeButton: UIButton = {
         let button = UIButton(type: .system)
