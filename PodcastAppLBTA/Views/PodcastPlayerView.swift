@@ -12,7 +12,6 @@ import AVKit
 
 class PodcastPlayerView: UIView {
     
-    
     var episode: RSSFeedItem? {
         didSet {
             
@@ -31,6 +30,11 @@ class PodcastPlayerView: UIView {
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         
+    }
+    
+    
+    deinit {
+        print("Deinitialized")
     }
     
     
@@ -136,6 +140,7 @@ class PodcastPlayerView: UIView {
         print("Play/Pause")
         
         if player.timeControlStatus == .playing {
+            
             player.pause()
             playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
             shrinkImageView()
@@ -153,11 +158,21 @@ class PodcastPlayerView: UIView {
         player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             self?.time1.text = time.toDisplayString()
             self?.updateTimeSlider()
+            self?.toShowFinishEpisode()
 
         }
 
         guard let durationTime = player.currentItem?.duration else {return}
         time2.text = durationTime.toDisplayString()
+        
+    }
+    
+    fileprivate func toShowFinishEpisode() {
+        
+        if time1.text == time2.text {
+            playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        }
+        
     }
     
     fileprivate func updateTimeSlider() {
@@ -239,7 +254,7 @@ class PodcastPlayerView: UIView {
     @objc func handleCloseButton() {
         removeFromSuperview()
     }
-  
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -293,8 +308,6 @@ class PodcastPlayerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print("Deinit !!!!")
-    }
+  
     
 }

@@ -85,13 +85,9 @@ extension EpisodesController: UICollectionViewDelegateFlowLayout {
         .init(width: (view.frame.width - 48), height: 120)
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 
         return 1
     }
-    
-    
-    
     
 }
