@@ -10,8 +10,9 @@ import FeedKit
 import AVKit
 
 
+
 class PodcastPlayerView: UIView {
-    
+        
     var episode: RSSFeedItem? {
         didSet {
             
@@ -252,7 +253,19 @@ class PodcastPlayerView: UIView {
     }()
     
     @objc func handleCloseButton() {
-        removeFromSuperview()
+        
+        
+        let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        
+        let tabBarController = keyWindow?.rootViewController as? BaseTabBarController
+        tabBarController?.minimizeFloatView()
+        print("Close Button Clicked")
+        
+        
     }
     
     

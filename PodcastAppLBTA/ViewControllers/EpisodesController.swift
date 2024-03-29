@@ -67,13 +67,21 @@ class EpisodesController: BaseListController {
                 .first?.windows
                 .filter({$0.isKeyWindow}).first
         
-        let podcastPlayerView = PodcastPlayerView()
-        podcastPlayerView.frame = self.view.frame
-        keyWindow?.addSubview(podcastPlayerView)
+        
+        let tabBarController = keyWindow?.rootViewController as? BaseTabBarController
+        tabBarController?.maximizeFloatView()
         
         let episode = episodes[indexPath.item]
+        tabBarController?.playerView.episode = episode
         
-        podcastPlayerView.episode = episode
+        
+//        let podcastPlayerView = PodcastPlayerView()
+//        podcastPlayerView.frame = self.view.frame
+//        keyWindow?.addSubview(podcastPlayerView)
+//
+//        let episode = episodes[indexPath.item]
+//
+//        podcastPlayerView.episode = episode
         
     }
 }

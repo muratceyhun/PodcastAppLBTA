@@ -8,19 +8,29 @@
 import UIKit
 
 class BaseTabBarController: UITabBarController {
-
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupViewControllers()
         setupFloatView()
-        
+   
+    
+        let tabBarAppearance = UITabBarAppearance()
+//        tabBarAppearance.configureWithOpaqueBackground()
+//        tabBarAppearance.configureWithTransparentBackground()
+        tabBarAppearance.configureWithDefaultBackground()
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
     }
+    
+
     
     fileprivate func setupViewControllers() {
         
         view.backgroundColor = .white
         viewControllers =
+        
         [
             creatingNavController(viewController: SearchController(), navTitle: "Search", tabTitle: "Search", imageName: "magnifyingglass"),
             creatingNavController(viewController: FavoritesController(), navTitle: "Favorites", tabTitle: "Favorites", imageName: "beats.headphones"),
@@ -32,35 +42,39 @@ class BaseTabBarController: UITabBarController {
     var maximizeFloatViewConstant: NSLayoutConstraint?
     var minimizeFloatViewConstant: NSLayoutConstraint?
     
+    
+    let playerView = PodcastPlayerView()
+
     fileprivate func setupFloatView() {
-        
-        let playerView = UIView()
-        playerView.backgroundColor = .lightGray
 //        view.addSubview(playerView)
         view.insertSubview(playerView, belowSubview: tabBar)
-//        playerView.anchor(top: tabBar.topAnchor, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: -100, left: 0, bottom: 0, right: 0))
-        
+
         playerView.translatesAutoresizingMaskIntoConstraints = false
         maximizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor)
         maximizeFloatViewConstant?.isActive = false
-        minimizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
-        minimizeFloatViewConstant?.isActive = true
+        minimizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -80)
+        minimizeFloatViewConstant?.isActive = false
         playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
         playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-
-        perform(#selector(maximizeFloatView), with: nil, afterDelay: 2)
         
+        
+        playerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
     }
     
+    @objc func handleTapMaximize() {
+        print("3333")
+        self.maximizeFloatView()
+    }
+        
     @objc func minimizeFloatView() {
-        
+
+
     
-        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
-            
             self.maximizeFloatViewConstant?.isActive = false
             self.minimizeFloatViewConstant?.isActive = true
+            self.tabBar.isHidden = false
             self.view.layoutIfNeeded()
             
         }
@@ -69,20 +83,20 @@ class BaseTabBarController: UITabBarController {
     
     @objc func maximizeFloatView() {
         
-    
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             
+            
             self.maximizeFloatViewConstant?.isActive = true
             self.minimizeFloatViewConstant?.isActive = false
+            self.tabBar.isHidden = true
             self.view.layoutIfNeeded()
+            
             
         }
         
     }
     
-    
-
     
     //MARK: - Helper Functions
     
