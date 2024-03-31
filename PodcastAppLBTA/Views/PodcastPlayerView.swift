@@ -17,7 +17,11 @@ class PodcastPlayerView: UIView {
         didSet {
             
             imageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
-            podcastName.text = episode?.title
+            miniUIImageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
+
+            imageView.layer.cornerRadius = 24
+            episodeName.text = episode?.title
+            miniEpisodeName.text = episode?.title
             artistName.text = episode?.iTunes?.iTunesAuthor
             playEpisode()
             shrinkImageView()
@@ -50,7 +54,6 @@ class PodcastPlayerView: UIView {
     let imageView: UIImageView = {
         let iw = UIImageView()
         iw.backgroundColor = .green
-        iw.layer.cornerRadius = 24
         iw.clipsToBounds = true
         return iw
     }()
@@ -93,7 +96,7 @@ class PodcastPlayerView: UIView {
     }()
     
     
-    let podcastName: UILabel = {
+    let episodeName: UILabel = {
         let name = UILabel()
         name.text = "Podcast Name"
         name.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -265,15 +268,87 @@ class PodcastPlayerView: UIView {
         tabBarController?.minimizeFloatView()
         print("Close Button Clicked")
         
-        
     }
     
+    let miniUIImageView: UIImageView = {
+        let iw = UIImageView()
+        iw.backgroundColor = .green
+        iw.layer.cornerRadius = 8
+        iw.clipsToBounds = true
+        iw.constrainHeight(constant: 64)
+        iw.constrainWidth(constant: 64)
+        return iw
+    }()
+    
+    
+    let miniEpisodeName: UILabel = {
+        let name = UILabel()
+        name.text = "Episode Name"
+        name.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        name.numberOfLines = 1
+        name.textAlignment = .left
+        name.constrainWidth(constant: 160)
+        name.constrainHeight(constant: 80)
+        return name
+    }()
+    
+    lazy var miniPlayPauseButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        button.constrainHeight(constant: 58)
+        button.constrainWidth(constant: 58)
+        button.addTarget(self, action: #selector(miniHandlePlayPause), for: .touchUpInside)
+        return button
+    }()
+    
+    
+    @objc func miniHandlePlayPause() {
+        print("Play/Pause")
+        
+        if player.timeControlStatus == .playing {
+            
+            player.pause()
+            miniPlayPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        } else {
+            player.play()
+            episodeTime()
+            miniPlayPauseButton.setImage(UIImage(systemName: "pause.fill"), for: .normal)
+        }
+    }
+    
+    let miniForwardButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "goforward.15"), for: .normal)
+        button.constrainHeight(constant: 58)
+        button.constrainWidth(constant: 58)
+        button.addTarget(self, action: #selector(handleGo15), for: .touchUpInside)
+        return button
+    }()
+    
+    
+    let miniPlayerView = UIView()
+
+    
+    
+    fileprivate func setupMiniPlayerView() {
+        
+        addSubview(miniPlayerView)
+        miniPlayerView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor)
+        let stackView = UIStackView(arrangedSubviews: [miniUIImageView, miniEpisodeName, miniPlayPauseButton, miniForwardButton])
+        stackView.spacing = 8
+        stackView.distribution = .fillProportionally
+        stackView.alignment = .center
+        miniPlayerView.addSubview(stackView)
+        stackView.anchor(top: miniPlayerView.topAnchor, leading: miniPlayerView.leadingAnchor, bottom: miniPlayerView.bottomAnchor, trailing: miniPlayerView.trailingAnchor, padding: .init(top: 4, left: 12, bottom: 4, right: 0))
+        miniPlayerView.constrainHeight(constant: 88)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         backgroundColor = .white
-        
+        setupMiniPlayerView()
+    
         addSubview(imageView)
         imageView.anchor(top: safeAreaLayoutGuide.topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor, padding: .init(top: 30, left: 30, bottom: 0, right: 30))
         imageView.constrainHeight(constant: 320)
@@ -287,11 +362,11 @@ class PodcastPlayerView: UIView {
         addSubview(time2)
         time2.anchor(top: timeSlider.bottomAnchor, leading: nil, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 4, left: 0, bottom: 0, right: 0))
         
-        addSubview(podcastName)
-        podcastName.anchor(top: timeSlider.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 48, left: 0, bottom: 0, right: 0))
+        addSubview(episodeName)
+        episodeName.anchor(top: timeSlider.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 48, left: 0, bottom: 0, right: 0))
         
         addSubview(artistName)
-        artistName.anchor(top: podcastName.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 10, left: 0, bottom: 0, right: 0))
+        artistName.anchor(top: episodeName.bottomAnchor, leading: timeSlider.leadingAnchor, bottom: nil, trailing: timeSlider.trailingAnchor, padding: .init(top: 10, left: 0, bottom: 0, right: 0))
 
         let stackView = UIStackView(arrangedSubviews: [backwardButton, playPauseButton, forwardButton])
         stackView.distribution = .fillEqually
@@ -313,6 +388,8 @@ class PodcastPlayerView: UIView {
         closeButton.anchor(top: safeAreaLayoutGuide.topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 40, left: 0, bottom: 0, right: 40))
         closeButton.constrainHeight(constant: 64)
         closeButton.constrainWidth(constant: 64)
+        
+        
         
 
     }

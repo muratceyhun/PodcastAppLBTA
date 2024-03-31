@@ -46,13 +46,14 @@ class BaseTabBarController: UITabBarController {
     let playerView = PodcastPlayerView()
 
     fileprivate func setupFloatView() {
+        playerView.backgroundColor = .lightGray
 //        view.addSubview(playerView)
         view.insertSubview(playerView, belowSubview: tabBar)
 
         playerView.translatesAutoresizingMaskIntoConstraints = false
         maximizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor)
         maximizeFloatViewConstant?.isActive = false
-        minimizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -80)
+        minimizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -88)
         minimizeFloatViewConstant?.isActive = false
         playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
@@ -69,12 +70,14 @@ class BaseTabBarController: UITabBarController {
         
     @objc func minimizeFloatView() {
 
-
     
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             self.maximizeFloatViewConstant?.isActive = false
             self.minimizeFloatViewConstant?.isActive = true
             self.tabBar.isHidden = false
+            self.playerView.imageView.isHidden = true
+            self.playerView.closeButton.isHidden = true
+            self.playerView.miniPlayerView.isHidden = false
             self.view.layoutIfNeeded()
             
         }
@@ -89,6 +92,9 @@ class BaseTabBarController: UITabBarController {
             
             self.maximizeFloatViewConstant?.isActive = true
             self.minimizeFloatViewConstant?.isActive = false
+            self.playerView.imageView.isHidden = false
+            self.playerView.closeButton.isHidden = false
+            self.playerView.miniPlayerView.isHidden = true
             self.tabBar.isHidden = true
             self.view.layoutIfNeeded()
             

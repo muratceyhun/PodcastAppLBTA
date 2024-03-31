@@ -72,9 +72,7 @@ class SearchController: BaseListController, UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         activityIndicator.startAnimating()
-        
         timer?.invalidate()
-        
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { _ in
             ServiceManager.shared.fetchPodcasts(searchText: searchText) { podcasts, err in
                 
@@ -102,6 +100,7 @@ class SearchController: BaseListController, UISearchBarDelegate {
             }
         })
     }
+    
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         
