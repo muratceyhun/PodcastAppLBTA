@@ -46,7 +46,6 @@ class BaseTabBarController: UITabBarController {
     let playerView = PodcastPlayerView()
 
     fileprivate func setupFloatView() {
-        playerView.backgroundColor = .lightGray
 //        view.addSubview(playerView)
         view.insertSubview(playerView, belowSubview: tabBar)
 
@@ -61,12 +60,61 @@ class BaseTabBarController: UITabBarController {
         
         
         playerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
+        playerView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
     }
     
     @objc func handleTapMaximize() {
-        print("3333")
         self.maximizeFloatView()
     }
+    
+    @objc func handlePan(gesture: UIPanGestureRecognizer) {
+        
+        var translationY = gesture.translation(in: view.superview).y
+        let threshold: CGFloat = view.frame.size.height / 2
+
+        
+        if gesture.state == .began {
+            
+            
+        } else if gesture.state == .changed {
+            playerView.transform = CGAffineTransform(translationX: 0, y: translationY)
+            translationY = -translationY
+            playerView.miniPlayerView.alpha = 40 / translationY
+            playerView.imageView.alpha = 1 / 400 * translationY
+            playerView.closeButton.alpha = 1 / 400 * translationY
+            
+        } else if gesture.state == .ended {
+            
+            print(translationY, threshold)
+            
+            translationY = -translationY
+            
+            if translationY > threshold {
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) {
+                    self.playerView.miniPlayerView.alpha = 0
+                    self.playerView.imageView.alpha = 1
+                    self.playerView.closeButton.alpha = 1
+                }
+                print("maximize")
+            } else {
+                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) {
+                    self.playerView.transform = .identity
+                    print("minimize")
+                    self.playerView.miniPlayerView.alpha = 1
+                    self.playerView.imageView.alpha = 0
+                    self.playerView.closeButton.alpha = 0
+
+                }
+            }
+            
+         
+            
+        }
+        
+        
+    }
+    
+    
         
     @objc func minimizeFloatView() {
 
@@ -75,9 +123,9 @@ class BaseTabBarController: UITabBarController {
             self.maximizeFloatViewConstant?.isActive = false
             self.minimizeFloatViewConstant?.isActive = true
             self.tabBar.isHidden = false
-            self.playerView.imageView.isHidden = true
-            self.playerView.closeButton.isHidden = true
-            self.playerView.miniPlayerView.isHidden = false
+            self.playerView.imageView.alpha = 0
+            self.playerView.closeButton.alpha = 0
+            self.playerView.miniPlayerView.alpha = 1
             self.view.layoutIfNeeded()
             
         }
@@ -92,9 +140,9 @@ class BaseTabBarController: UITabBarController {
             
             self.maximizeFloatViewConstant?.isActive = true
             self.minimizeFloatViewConstant?.isActive = false
-            self.playerView.imageView.isHidden = false
-            self.playerView.closeButton.isHidden = false
-            self.playerView.miniPlayerView.isHidden = true
+            self.playerView.imageView.alpha = 1
+            self.playerView.closeButton.alpha = 1
+            self.playerView.miniPlayerView.alpha = 0
             self.tabBar.isHidden = true
             self.view.layoutIfNeeded()
             

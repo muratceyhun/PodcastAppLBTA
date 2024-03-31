@@ -334,6 +334,12 @@ class PodcastPlayerView: UIView {
         
         addSubview(miniPlayerView)
         miniPlayerView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor)
+        let separatorLine = UIView()
+        separatorLine.backgroundColor = UIColor(white: 0.6, alpha: 0.7)
+        miniPlayerView.addSubview(separatorLine)
+
+        separatorLine.anchor(top: miniPlayerView.topAnchor, leading: miniPlayerView.leadingAnchor, bottom: nil, trailing: miniPlayerView.trailingAnchor)
+        separatorLine.constrainHeight(constant: 0.3)
         let stackView = UIStackView(arrangedSubviews: [miniUIImageView, miniEpisodeName, miniPlayPauseButton, miniForwardButton])
         stackView.spacing = 8
         stackView.distribution = .fillProportionally
