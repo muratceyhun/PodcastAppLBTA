@@ -13,18 +13,12 @@ class BaseTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupTabBarApperance()
         setupViewControllers()
         setupFloatView()
-   
-    
-        let tabBarAppearance = UITabBarAppearance()
-//        tabBarAppearance.configureWithOpaqueBackground()
-//        tabBarAppearance.configureWithTransparentBackground()
-        tabBarAppearance.configureWithDefaultBackground()
-        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+
     }
     
-
     
     fileprivate func setupViewControllers() {
         
@@ -39,28 +33,41 @@ class BaseTabBarController: UITabBarController {
         ]
     }
     
+    fileprivate func setupTabBarApperance() {
+        let tabBarAppearance = UITabBarAppearance()
+//        tabBarAppearance.configureWithOpaqueBackground()
+//        tabBarAppearance.configureWithTransparentBackground()
+        tabBarAppearance.configureWithDefaultBackground()
+        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+    }
+    
     var maximizeFloatViewConstant: NSLayoutConstraint?
     var minimizeFloatViewConstant: NSLayoutConstraint?
     
     
     let playerView = PodcastPlayerView()
-
+    
+    var panGesture: UIPanGestureRecognizer?
+    
+    
     fileprivate func setupFloatView() {
 //        view.addSubview(playerView)
         view.insertSubview(playerView, belowSubview: tabBar)
 
         playerView.translatesAutoresizingMaskIntoConstraints = false
-        maximizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor)
-        maximizeFloatViewConstant?.isActive = false
+        maximizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
+        maximizeFloatViewConstant?.isActive = true
         minimizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: tabBar.topAnchor, constant: -88)
         minimizeFloatViewConstant?.isActive = false
         playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: view.frame.height).isActive = true
         
         
         playerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
-        playerView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        guard let panGesture = panGesture else {return}
+        playerView.addGestureRecognizer(panGesture)
     }
     
     @objc func handleTapMaximize() {
@@ -69,57 +76,57 @@ class BaseTabBarController: UITabBarController {
     
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
         
-        var translationY = gesture.translation(in: view.superview).y
-        let threshold: CGFloat = view.frame.size.height / 2
-
-        
-        if gesture.state == .began {
-            
-            
-        } else if gesture.state == .changed {
-            playerView.transform = CGAffineTransform(translationX: 0, y: translationY)
-            translationY = -translationY
-            playerView.miniPlayerView.alpha = 40 / translationY
-            playerView.imageView.alpha = 1 / 400 * translationY
-            playerView.closeButton.alpha = 1 / 400 * translationY
-            
+        if gesture.state == .changed {
+            handleChanged(gesture: gesture)
         } else if gesture.state == .ended {
+            handleEnded(gesture: gesture)
+        }
+    }
+    
+    
+    func handleChanged(gesture: UIPanGestureRecognizer) {
+        var translationY = gesture.translation(in: view.superview).y
+        
+        playerView.transform = CGAffineTransform(translationX: 0, y: translationY)
+        translationY = -translationY
+        playerView.miniPlayerView.alpha = 40 / translationY
+        playerView.imageView.alpha = 1 / 400 * translationY
+        playerView.closeButton.alpha = 1 / 400 * translationY
+        
+    }
+    
+    func handleEnded(gesture: UIPanGestureRecognizer) {
+        
+        var translationY = gesture.translation(in: view.superview).y
+        let threshold: CGFloat = view.frame.size.height / 3
+        translationY = -translationY
+        print(translationY, threshold)
+        
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) {
             
-            print(translationY, threshold)
-            
-            translationY = -translationY
+            self.playerView.transform = .identity
             
             if translationY > threshold {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) {
                     self.playerView.miniPlayerView.alpha = 0
                     self.playerView.imageView.alpha = 1
                     self.playerView.closeButton.alpha = 1
-                }
-                print("maximize")
+                    self.maximizeFloatView()
+                    print("maximize")
             } else {
-                UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5) {
-                    self.playerView.transform = .identity
                     print("minimize")
                     self.playerView.miniPlayerView.alpha = 1
                     self.playerView.imageView.alpha = 0
                     self.playerView.closeButton.alpha = 0
 
-                }
             }
-            
-         
-            
         }
-        
-        
     }
     
     
-        
     @objc func minimizeFloatView() {
 
-    
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
+            
             self.maximizeFloatViewConstant?.isActive = false
             self.minimizeFloatViewConstant?.isActive = true
             self.tabBar.isHidden = false
@@ -127,28 +134,26 @@ class BaseTabBarController: UITabBarController {
             self.playerView.closeButton.alpha = 0
             self.playerView.miniPlayerView.alpha = 1
             self.view.layoutIfNeeded()
+            self.panGesture?.isEnabled = true
             
         }
-        
     }
     
     @objc func maximizeFloatView() {
         
-        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             
-            
-            self.maximizeFloatViewConstant?.isActive = true
             self.minimizeFloatViewConstant?.isActive = false
+            self.maximizeFloatViewConstant?.constant = 0
+            self.maximizeFloatViewConstant?.isActive = true
             self.playerView.imageView.alpha = 1
             self.playerView.closeButton.alpha = 1
             self.playerView.miniPlayerView.alpha = 0
+            self.panGesture?.isEnabled = false
             self.tabBar.isHidden = true
             self.view.layoutIfNeeded()
             
-            
         }
-        
     }
     
     

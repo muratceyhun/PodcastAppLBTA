@@ -396,14 +396,11 @@ class PodcastPlayerView: UIView {
         closeButton.constrainWidth(constant: 64)
         
         
-        
 
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-  
-    
+
 }
