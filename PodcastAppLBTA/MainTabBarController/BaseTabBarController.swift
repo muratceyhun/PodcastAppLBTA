@@ -68,7 +68,10 @@ class BaseTabBarController: UITabBarController {
         panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         guard let panGesture = panGesture else {return}
         playerView.addGestureRecognizer(panGesture)
+        
     }
+    
+ 
     
     @objc func handleTapMaximize() {
         self.maximizeFloatView()
@@ -87,12 +90,15 @@ class BaseTabBarController: UITabBarController {
     func handleChanged(gesture: UIPanGestureRecognizer) {
         var translationY = gesture.translation(in: view.superview).y
         
-        playerView.transform = CGAffineTransform(translationX: 0, y: translationY)
-        translationY = -translationY
-        playerView.miniPlayerView.alpha = 40 / translationY
-        playerView.imageView.alpha = 1 / 400 * translationY
-        playerView.closeButton.alpha = 1 / 400 * translationY
-        
+        if translationY < 0 {
+            playerView.transform = CGAffineTransform(translationX: 0, y: translationY)
+            print(translationY)
+            translationY = -translationY
+            playerView.miniPlayerView.alpha = 40 / translationY
+            playerView.imageView.alpha = 1 / 400 * translationY
+            playerView.closeButton.alpha = 1 / 400 * translationY
+            return
+        }
     }
     
     func handleEnded(gesture: UIPanGestureRecognizer) {

@@ -58,7 +58,7 @@ class PodcastPlayerView: UIView {
         return iw
     }()
     
-    let timeSlider: UISlider = {
+    lazy var timeSlider: UISlider = {
         let slider = UISlider()
         slider.addTarget(self, action: #selector(handleTimeSlider), for: .valueChanged)
         return slider
@@ -113,7 +113,7 @@ class PodcastPlayerView: UIView {
         return name
     }()
     
-    let backwardButton: UIButton = {
+    lazy var backwardButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "gobackward.15"), for: .normal)
         button.addTarget(self, action: #selector(handleGoBack15), for: .touchUpInside)
@@ -208,7 +208,7 @@ class PodcastPlayerView: UIView {
     }
     
 
-    let forwardButton: UIButton = {
+    lazy var forwardButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "goforward.15"), for: .normal)
         button.addTarget(self, action: #selector(handleGo15), for: .touchUpInside)
@@ -221,7 +221,7 @@ class PodcastPlayerView: UIView {
         
     }
     
-    let volumeSlider: UISlider = {
+    lazy var volumeSlider: UISlider = {
         let slider = UISlider()
         slider.addTarget(self, action: #selector(handleVolume), for: .valueChanged)
         slider.minimumValue = 0
@@ -316,7 +316,7 @@ class PodcastPlayerView: UIView {
         }
     }
     
-    let miniForwardButton: UIButton = {
+    lazy var miniForwardButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "goforward.15"), for: .normal)
         button.constrainHeight(constant: 58)

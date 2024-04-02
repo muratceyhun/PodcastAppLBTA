@@ -143,8 +143,6 @@ class SearchController: BaseListController, UISearchBarDelegate {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         let selectedPodcast = podcasts[indexPath.item]
-        print(selectedPodcast.collectionId)
-        guard let collectionID = selectedPodcast.collectionId else {return}
         
         let episodesController = EpisodesController()
         navigationController?.pushViewController(episodesController, animated: true)
