@@ -145,8 +145,8 @@ class SearchController: BaseListController, UISearchBarDelegate {
         let selectedPodcast = podcasts[indexPath.item]
         
         let episodesController = EpisodesController()
+        episodesController.podcast = selectedPodcast
         navigationController?.pushViewController(episodesController, animated: true)
-        episodesController.navigationItem.title = selectedPodcast.collectionName
         
         guard let feedUrl = selectedPodcast.feedUrl else {return}
         print(feedUrl)

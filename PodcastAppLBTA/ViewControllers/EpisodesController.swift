@@ -10,6 +10,13 @@ import FeedKit
 
 class EpisodesController: BaseListController {
     
+    
+    var podcast: PodcastResult? {
+        didSet {
+            navigationItem.title = podcast?.collectionName
+        }
+    }
+    
     let cellID = "cellID"
     
     var episodes = [RSSFeedItem]()
@@ -20,6 +27,48 @@ class EpisodesController: BaseListController {
         collectionView.backgroundColor = .white
         collectionView.register(EpisodeCell.self, forCellWithReuseIdentifier: cellID)
         setupActivityIndicator()
+        setupFavButton()
+    }
+    
+    
+    fileprivate func setupFavButton() {
+        navigationItem.rightBarButtonItems =
+        [
+            UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleSaveFavPodcasts)),
+            UIBarButtonItem(title: "Fetch", style: .done, target: self, action: #selector(handleFetchFavs))
+        ]
+    }
+    
+    let favKey = "favKey"
+    
+    
+    @objc func handleSaveFavPodcasts() {
+        print("Saving...")
+        
+        guard let podcast = podcast else {return}
+        
+        do {
+            
+            let data = try NSKeyedArchiver.archivedData(withRootObject: podcast, requiringSecureCoding: false)
+            UserDefaults.standard.set(data, forKey: favKey)
+        } catch let err {
+            print("Failed to save podcats", err)
+        }
+
+    }
+    
+    @objc fileprivate func handleFetchFavs() {
+        print("Fetching saved podcasts...")
+    
+        
+        guard let data = UserDefaults.standard.data(forKey: favKey) else {return}
+        do {
+            let podcast = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? PodcastResult
+            print(podcast?.collectionName ?? "", "", podcast?.artistName ?? "")
+        } catch let err {
+            print("Failed to fetch podcast...")
+        }
+
     }
     
     let activityIndicator = UIActivityIndicatorView(style: .large)

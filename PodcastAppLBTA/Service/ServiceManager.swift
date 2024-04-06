@@ -9,6 +9,12 @@ import UIKit
 
 class ServiceManager {
     
+    struct Podcast: Codable {
+        
+        let results: [PodcastResult]
+
+    }
+    
     static let shared = ServiceManager()
     
     func fetchPodcasts(searchText: String, completion: @escaping ((Podcast?, Error?) -> ())) {

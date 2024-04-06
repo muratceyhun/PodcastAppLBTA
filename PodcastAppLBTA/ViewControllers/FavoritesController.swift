@@ -17,9 +17,10 @@ class FavoritesController: BaseListController {
         setupCollectionView()
     }
     
+   
+    
     fileprivate func setupCollectionView() {
-        collectionView.backgroundColor = .purple
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellID)
+        collectionView.register(FavoriteCell.self, forCellWithReuseIdentifier: cellID)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -29,7 +30,6 @@ class FavoritesController: BaseListController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath)
-        cell.backgroundColor = .orange
         return cell
     }
 }
@@ -43,7 +43,7 @@ extension FavoritesController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let width = (collectionView.frame.width - 3 * 16) / 2
-        return .init(width: width, height: width)
+        return .init(width: width, height: width + 56)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
