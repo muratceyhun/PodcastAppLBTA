@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FeedKit
 
 class FavoritesController: BaseListController {
     
@@ -17,6 +18,25 @@ class FavoritesController: BaseListController {
         super.viewDidLoad()
         
         setupCollectionView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        else {return}
+        
+        guard let mainTabBarController = keyWindow.rootViewController as? BaseTabBarController else {return}
+        
+        favoritePodcasts = UserDefaults.standard.savedPodcasts()
+        collectionView.reloadData()
+        mainTabBarController.viewControllers?[1].tabBarItem.badgeValue = nil
+        
+        
     }
     
    
@@ -43,12 +63,65 @@ class FavoritesController: BaseListController {
             self.favoritePodcasts.remove(at: selectedIndexPath.item)
             self.collectionView.deleteItems(at: [selectedIndexPath])
             
-             
+
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             print("Cancel")
         }))
         
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let selectedPodcast = favoritePodcasts[indexPath.item]
+        
+        let episodesController = EpisodesController()
+        episodesController.podcast = selectedPodcast
+        navigationController?.pushViewController(episodesController, animated: true)
+        
+        guard let feedUrl = selectedPodcast.feedUrl else {return}
+        print(feedUrl)
+        
+        guard let url = URL(string: feedUrl) else {return}
+        
+        
+        DispatchQueue.global(qos: .background).async {
+            let parser = FeedParser(URL: url)
+            
+            parser.parseAsync { result in
+                
+                
+                switch result {
+                case .success(let feed):
+                    
+                    switch feed {
+                    case let .rss(feed):
+                        var episodes = [RSSFeedItem]()
+                        
+                        feed.items?.forEach({ episode in
+                            episodes.append(episode)
+                        })
+                        episodesController.episodes = episodes
+                        DispatchQueue.main.async {
+                            episodesController.collectionView.reloadData()
+                        }
+                        break
+                    case .atom(_):
+                        break
+                    case .json(_):
+                        break
+                    }
+                    
+                    
+                    
+                case .failure(let err):
+                    print(err)
+                }
+        }
+        
+        
+        
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

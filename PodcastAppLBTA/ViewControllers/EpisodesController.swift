@@ -39,17 +39,30 @@ class EpisodesController: BaseListController {
     }
     
     fileprivate func setupFavButton() {
-        navigationItem.rightBarButtonItems =
-        [
-            UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleSaveFavPodcasts)),
-            UIBarButtonItem(title: "Fetch", style: .done, target: self, action: #selector(handleFetchFavs))
-        ]
+        
+        
+        let favoritePodcasts = UserDefaults.standard.savedPodcasts()
+        
+        if favoritePodcasts.firstIndex(where: {$0.collectionId == self.podcast?.collectionId}) != nil {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"), style: .done, target: self, action: #selector(handleHeartClicked))
+        } else {
+            navigationItem.rightBarButtonItems =
+            [
+                UIBarButtonItem(title: "Favorite", style: .done, target: self, action: #selector(handleSaveFavPodcasts))
+//                UIBarButtonItem(title: "Fetch", style: .done, target: self, action: #selector(handleFetchFavs))
+            ]
+        }
+        
+    }
+    
+    @objc func handleHeartClicked() {
+        print("Heart....")
     }
     
     let favKey = "favKey"
 
     @objc func handleSaveFavPodcasts() {
-        
+   
         print("Saving podcast...")
         
         guard let podcast = podcast else {return}
@@ -63,9 +76,15 @@ class EpisodesController: BaseListController {
             listOfPodcasts.append(podcast)
             let data = try NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts, requiringSecureCoding: false)
             UserDefaults.standard.set(data, forKey: favKey)
+            showBadgeHighligt()
+            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"), style: .done, target: self, action: nil)
         } catch let err {
             print("Failed to get array", err)
         }
+        
+        
+    
+        
 //        ----
         
 //            var listOfPodcasts = [PodcastResult]()
@@ -76,6 +95,23 @@ class EpisodesController: BaseListController {
 //            } catch let err {
 //                print("Failed to save podcast", err)
 //            }
+        
+    }
+    
+    fileprivate func showBadgeHighligt() {
+        
+        
+        guard let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        else {return}
+        
+        guard let mainTabBarController = keyWindow.rootViewController as? BaseTabBarController else {return}
+        
+        mainTabBarController.viewControllers?[1].tabBarItem.badgeValue = "New"
+        
         
     }
     
