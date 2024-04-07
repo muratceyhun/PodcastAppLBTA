@@ -16,6 +16,7 @@ struct Podcast: Codable {
 
 class PodcastResult: NSObject, Codable, NSCoding {
     
+
     func encode(with coder: NSCoder) {
         
         coder.encode(artistName ?? "", forKey: "artistNameKey")

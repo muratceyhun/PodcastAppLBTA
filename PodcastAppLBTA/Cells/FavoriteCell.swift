@@ -10,6 +10,14 @@ import UIKit
 
 class FavoriteCell: UICollectionViewCell {
     
+    var favoritePodcast: PodcastResult? {
+        didSet {
+            podcastName.text = favoritePodcast?.collectionName
+            artistName.text = favoritePodcast?.artistName
+            imageView.sd_setImage(with: URL(string: favoritePodcast?.artworkUrl600 ?? ""))
+        }
+    }
+    
     let imageView: UIImageView = {
         let iw = UIImageView()
         iw.backgroundColor = .black
@@ -31,9 +39,6 @@ class FavoriteCell: UICollectionViewCell {
         name.textColor = .lightGray
         return name
     }()
-    
-    
-    
     
     
     override init(frame: CGRect) {

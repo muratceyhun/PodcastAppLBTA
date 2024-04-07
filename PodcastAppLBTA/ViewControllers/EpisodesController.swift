@@ -10,7 +10,6 @@ import FeedKit
 
 class EpisodesController: BaseListController {
     
-    
     var podcast: PodcastResult? {
         didSet {
             navigationItem.title = podcast?.collectionName
@@ -24,12 +23,20 @@ class EpisodesController: BaseListController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = .white
-        collectionView.register(EpisodeCell.self, forCellWithReuseIdentifier: cellID)
+        setupCollectionView()
         setupActivityIndicator()
         setupFavButton()
     }
     
+    
+    fileprivate func setupCollectionView() {
+        collectionView.backgroundColor = .white
+        collectionView.register(EpisodeCell.self, forCellWithReuseIdentifier: cellID)
+    }
+    
+    @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
+        print("****")
+    }
     
     fileprivate func setupFavButton() {
         navigationItem.rightBarButtonItems =
@@ -40,33 +47,50 @@ class EpisodesController: BaseListController {
     }
     
     let favKey = "favKey"
-    
-    
+
     @objc func handleSaveFavPodcasts() {
-        print("Saving...")
+        
+        print("Saving podcast...")
         
         guard let podcast = podcast else {return}
-        
+
+//        guard let savedPodcastsData = UserDefaults.standard.data(forKey: UserDefaults.favKey) else {return}
+
         do {
-            
-            let data = try NSKeyedArchiver.archivedData(withRootObject: podcast, requiringSecureCoding: false)
+//            guard let savedPodcasts = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedPodcastsData) as? [PodcastResult] else {return}
+            let savedPodcasts = UserDefaults.standard.savedPodcasts()
+            var listOfPodcasts = savedPodcasts
+            listOfPodcasts.append(podcast)
+            let data = try NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts, requiringSecureCoding: false)
             UserDefaults.standard.set(data, forKey: favKey)
         } catch let err {
-            print("Failed to save podcats", err)
+            print("Failed to get array", err)
         }
-
+//        ----
+        
+//            var listOfPodcasts = [PodcastResult]()
+//            listOfPodcasts.append(podcast)
+//            do {
+//                let data = try NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts, requiringSecureCoding: false)
+//                UserDefaults.standard.set(data, forKey: favKey)
+//            } catch let err {
+//                print("Failed to save podcast", err)
+//            }
+        
     }
     
     @objc fileprivate func handleFetchFavs() {
-        print("Fetching saved podcasts...")
-    
         
-        guard let data = UserDefaults.standard.data(forKey: favKey) else {return}
+        print("Fetching Podcast...")
+        
+        guard let data = UserDefaults.standard.data(forKey: UserDefaults.favKey) else {return}
         do {
-            let podcast = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? PodcastResult
-            print(podcast?.collectionName ?? "", "", podcast?.artistName ?? "")
+            
+            let savedPodcasts = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [PodcastResult]
+            guard let savedPodcasts = savedPodcasts else {return}
+            savedPodcasts.forEach{print($0.collectionName ?? "", "|", $0.artistName ?? "")}
         } catch let err {
-            print("Failed to fetch podcast...")
+            print("Failed to fetch podcast...", err)
         }
 
     }

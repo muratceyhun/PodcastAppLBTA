@@ -14,8 +14,6 @@ class EpisodeCell: UICollectionViewCell {
         didSet {
             
             guard let imageUrl = episode?.iTunes?.iTunesImage?.attributes?.href else {return}
-            print("-----")
-            print(imageUrl)
             imageView.sd_setImage(with: URL(string: imageUrl))
             episodeName.text = episode?.title
             episodeDescription.text = episode?.description
