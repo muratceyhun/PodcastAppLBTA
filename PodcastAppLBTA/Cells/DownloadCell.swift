@@ -7,8 +7,9 @@
 
 import UIKit
 import FeedKit
+import SwipeCellKit
 
-class DownloadCell: UICollectionViewCell {
+class DownloadCell: SwipeCollectionViewCell {
     
         
         var episode: Episode? {
@@ -74,14 +75,14 @@ class DownloadCell: UICollectionViewCell {
         fileprivate func setupLayout() {
             
             
-            addSubview(episodeImageView)
+            contentView.addSubview(episodeImageView)
             episodeImageView.anchor(top: nil, leading: leadingAnchor, bottom: nil, trailing: nil)
             episodeImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             episodeImageView.constrainWidth(constant: 92)
             episodeImageView.constrainHeight(constant: 92)
             
             let verticalStackView = UIStackView(arrangedSubviews: [dateLabel, episodeName, episodeDescription])
-            addSubview(verticalStackView)
+                contentView.addSubview(verticalStackView)
             verticalStackView.axis = .vertical
             verticalStackView.anchor(top: episodeImageView.topAnchor, leading: episodeImageView.trailingAnchor, bottom: episodeImageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
             verticalStackView.distribution = .fillProportionally

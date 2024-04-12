@@ -18,8 +18,8 @@ extension UserDefaults {
     func downloadEpisode(episode: Episode) {
         
         do {
-            var downloadedEpisodes = fetchDownloadedEpisodes()
-            downloadedEpisodes.append(episode)
+            let downloadedEpisodes = fetchDownloadedEpisodes()
+//            downloadedEpisodes.insert(episode, at: 0)
             let episodeData = try JSONEncoder().encode(downloadedEpisodes)
             UserDefaults.standard.set(episodeData, forKey: UserDefaults.downloadKey)
             
@@ -27,6 +27,21 @@ extension UserDefaults {
             
             print("Failed to turn the episode into data...", err)
             
+        }
+        
+    }
+    
+    
+    func deleteEpisode(episode: Episode) {
+        
+        let downloadedEpisodes = UserDefaults.standard.fetchDownloadedEpisodes()
+        let updatedEpisodes = downloadedEpisodes.filter{$0.imageUrl != episode.imageUrl && $0.title != episode.title}
+        do {
+            let updatedEpisodesData = try JSONEncoder().encode(updatedEpisodes)
+            UserDefaults.standard.set(updatedEpisodesData, forKey: UserDefaults.downloadKey)
+
+        } catch let err {
+            print("Failed to encode updated episodes", err)
         }
         
     }

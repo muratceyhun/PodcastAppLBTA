@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import SwipeCellKit
 
 
-class DownloadsController: BaseListController {
-    
+class DownloadsController: BaseListController, SwipeCollectionViewCellDelegate {
+   
     let downloadsCellID = "downloadsCellID"
     
     var downloadedEpisodes = UserDefaults.standard.fetchDownloadedEpisodes()
@@ -37,8 +38,29 @@ class DownloadsController: BaseListController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: downloadsCellID, for: indexPath) as! DownloadCell
+        cell.delegate = self
         cell.episode = downloadedEpisodes[indexPath.item]
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        
+        let selectedEpisode = downloadedEpisodes[indexPath.item]
+        
+        
+        let deleteAction = SwipeAction(style: .destructive, title: "Delete") { _, _ in
+            
+            self.downloadedEpisodes.remove(at: indexPath.item)
+            self.collectionView.deleteItems(at: [indexPath])
+            UserDefaults.standard.deleteEpisode(episode: selectedEpisode)
+            self.downloadedEpisodes = UserDefaults.standard.fetchDownloadedEpisodes()
+            
+            
+        }
+        
+        
+        return [deleteAction]
+        
     }
 
 }
