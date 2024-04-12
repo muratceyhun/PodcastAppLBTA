@@ -6,15 +6,10 @@
 //
 
 import UIKit
+import FeedKit
 
 class ServiceManager {
-    
-    struct Podcast: Codable {
         
-        let results: [PodcastResult]
-
-    }
-    
     static let shared = ServiceManager()
     
     func fetchPodcasts(searchText: String, completion: @escaping ((Podcast?, Error?) -> ())) {
@@ -46,5 +41,52 @@ class ServiceManager {
                     
                 }.resume()
     
+    }
+    
+    
+    
+    func fetchEpisodes(podcast: PodcastResult, completion: @escaping ([Episode]?, Error?) -> ()) {
+        
+                    
+        guard let feedUrl = podcast.feedUrl else {return}
+            print(feedUrl)
+            
+            guard let url = URL(string: feedUrl) else {return}
+            
+            
+            DispatchQueue.global(qos: .background).async {
+                let parser = FeedParser(URL: url)
+                
+                parser.parseAsync { result in
+                    
+                    
+                    switch result {
+                    case .success(let feed):
+                        
+                        switch feed {
+                        case let .rss(feed):
+                            var episodes = [Episode]()
+                            
+                            feed.items?.forEach({ episode in
+                                let episode = Episode(episode: episode)
+                                episodes.append(episode)
+                            })
+                            completion(episodes, nil)
+                            
+                            break
+                        case .atom(_):
+                            break
+                        case .json(_):
+                            break
+                        }
+                        
+                        
+                        
+                    case .failure(let err):
+                        print(err)
+                        completion(nil, err)
+                    }
+                }
+            }
     }
 }

@@ -7,14 +7,15 @@
 
 import UIKit
 import FeedKit
+import SwipeCellKit
 
-class EpisodeCell: UICollectionViewCell {
+class EpisodeCell: SwipeCollectionViewCell {
     
-    var episode: RSSFeedItem? {
+    var episode: Episode? {
         didSet {
             
-            guard let imageUrl = episode?.iTunes?.iTunesImage?.attributes?.href else {return}
-            imageView.sd_setImage(with: URL(string: imageUrl))
+            guard let imageUrl = episode?.imageUrl else {return}
+            episodeImageView.sd_setImage(with: URL(string: imageUrl))
             episodeName.text = episode?.title
             episodeDescription.text = episode?.description
 
@@ -28,9 +29,7 @@ class EpisodeCell: UICollectionViewCell {
     }
     
 
-    
-    
-    let imageView: UIImageView = {
+    let episodeImageView: UIImageView = {
         let iw = UIImageView()
         iw.backgroundColor = .red
         iw.layer.cornerRadius = 12
@@ -77,17 +76,19 @@ class EpisodeCell: UICollectionViewCell {
     
     fileprivate func setupLayout() {
         
-        
-        addSubview(imageView)
-        imageView.anchor(top: nil, leading: leadingAnchor, bottom: nil, trailing: nil)
-        imageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        imageView.constrainWidth(constant: 92)
-        imageView.constrainHeight(constant: 92)
+    
+        contentView.addSubview(episodeImageView)
+//        addSubview(episodeImageView)
+        episodeImageView.anchor(top: nil, leading: leadingAnchor, bottom: nil, trailing: nil)
+        episodeImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        episodeImageView.constrainWidth(constant: 92)
+        episodeImageView.constrainHeight(constant: 92)
         
         let verticalStackView = UIStackView(arrangedSubviews: [dateLabel, episodeName, episodeDescription])
-        addSubview(verticalStackView)
+        contentView.addSubview(verticalStackView)
+//        addSubview(verticalStackView)
         verticalStackView.axis = .vertical
-        verticalStackView.anchor(top: imageView.topAnchor, leading: imageView.trailingAnchor, bottom: imageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
+        verticalStackView.anchor(top: episodeImageView.topAnchor, leading: episodeImageView.trailingAnchor, bottom: episodeImageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
         verticalStackView.distribution = .fillProportionally
     }
     

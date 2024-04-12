@@ -13,25 +13,25 @@ import AVKit
 
 class PodcastPlayerView: UIView {
         
-    var episode: RSSFeedItem? {
+    var episode: Episode? {
         didSet {
             
-            imageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
-            miniUIImageView.sd_setImage(with: URL(string: episode?.iTunes?.iTunesImage?.attributes?.href ?? ""))
+            imageView.sd_setImage(with: URL(string: episode?.imageUrl ?? ""))
+            miniUIImageView.sd_setImage(with: URL(string: episode?.imageUrl ?? ""))
 
             imageView.layer.cornerRadius = 24
             episodeName.text = episode?.title
             miniEpisodeName.text = episode?.title
-            artistName.text = episode?.iTunes?.iTunesAuthor
+            artistName.text = episode?.artistName
             playEpisode()
             shrinkImageView()
         }
     }
     
     fileprivate func playEpisode() {
-        print("Episode is playing at", episode?.enclosure?.attributes?.url ?? "")
+        print("Episode is playing at", episode?.url ?? "")
         
-        guard let url = URL(string: episode?.enclosure?.attributes?.url ?? "") else {return}
+        guard let url = URL(string: episode?.url ?? "") else {return}
         let playerItem = AVPlayerItem(url: url)
         player.replaceCurrentItem(with: playerItem)
         

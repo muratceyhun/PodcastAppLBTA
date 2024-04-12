@@ -148,120 +148,22 @@ class SearchController: BaseListController, UISearchBarDelegate {
         episodesController.podcast = selectedPodcast
         navigationController?.pushViewController(episodesController, animated: true)
         
-        guard let feedUrl = selectedPodcast.feedUrl else {return}
-        print(feedUrl)
-        
-        guard let url = URL(string: feedUrl) else {return}
-        
-        
-        DispatchQueue.global(qos: .background).async {
-            let parser = FeedParser(URL: url)
+        ServiceManager.shared.fetchEpisodes(podcast: selectedPodcast) { episodes, err in
             
-            parser.parseAsync { result in
-                
-                
-                switch result {
-                case .success(let feed):
-                    
-                    switch feed {
-                    case let .rss(feed):
-                        var episodes = [RSSFeedItem]()
-                        
-                        feed.items?.forEach({ episode in
-                            episodes.append(episode)
-                        })
-                        episodesController.episodes = episodes
-                        DispatchQueue.main.async {
-                            episodesController.collectionView.reloadData()
-                        }
-                        break
-                    case .atom(_):
-                        break
-                    case .json(_):
-                        break
-                    }
-                    
-                    
-                    
-                case .failure(let err):
-                    print(err)
-                }
+            if let err = err {
+                print("Failed to fetch episodes", err)
+                return
+            }
+            
+            guard let episodes = episodes else {return}
+            episodesController.episodes = episodes
+            DispatchQueue.main.async {
+                episodesController.collectionView.reloadData()
+            }
+            
+            
         }
-        
-        
-        
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-       
-                
-        // For artist name
-        
-        
-//        episodesController.podcast = selectedPodcast
-//
-//        let url = "https://itunes.apple.com/lookup?id=\(collectionID)&country=US&media=podcast&entity=podcastEpisode&limit=40"
-//        ServiceManager.shared.fetchEpisodes(url: url) { episodes, err in
-//
-//            var filteredEpisodes = [EpisodeResult]()
-//
-//            if let err = err {
-//                print("Failed to get episodes", err)
-//                return
-//            }
-//
-//            guard let episodesItems = episodes?.results else {return}
-//
-//            episodesItems.forEach { item in
-//                if item.episodeContentType == "audio" {
-//                    filteredEpisodes.append(item)
-//                } else {
-//                    return
-//                }
-//            }
-//
-//
-//            episodesController.episodes = filteredEpisodes
-//            DispatchQueue.main.async {
-//                episodesController.collectionView.reloadData()
-//            }
-//        }
-        
+
     }
     
 }

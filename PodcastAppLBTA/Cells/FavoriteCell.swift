@@ -10,6 +10,9 @@ import UIKit
 
 class FavoriteCell: UICollectionViewCell {
     
+    
+    
+    
     var favoritePodcast: PodcastResult? {
         didSet {
             podcastName.text = favoritePodcast?.collectionName

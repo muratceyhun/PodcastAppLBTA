@@ -6,16 +6,28 @@
 //
 
 import Foundation
+import FeedKit
 
 
-//struct Episode {
-//    
-//    let name: String?
-//    let description: String?
-//    let pubDate: String?
-//    let imageUrl: String?
-//    
-//}
+struct Episode: Codable {
+    
+    let title: String?
+    let pubDate: Date?
+    let artistName: String?
+    let description: String?
+    let imageUrl: String?
+    let url: String?
+    
+    init(episode: RSSFeedItem) {
+        self.title = episode.title ?? ""
+        self.pubDate = episode.pubDate ?? Date()
+        self.artistName = episode.iTunes?.iTunesAuthor ?? ""
+        self.description = episode.description ?? ""
+        self.imageUrl = episode.iTunes?.iTunesImage?.attributes?.href ?? ""
+        self.url = episode.enclosure?.attributes?.url ?? ""
+
+    }
+}
 
 
 

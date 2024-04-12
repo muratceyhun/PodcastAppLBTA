@@ -12,7 +12,7 @@ class FavoritesController: BaseListController {
     
     let cellID = "cellID"
     
-    var favoritePodcasts =  UserDefaults.standard.savedPodcasts()
+    var favoritePodcasts =  UserDefaults.standard.fetchFavoritePodcasts()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,22 +24,22 @@ class FavoritesController: BaseListController {
         super.viewWillAppear(animated)
         
         guard let keyWindow = UIApplication.shared.connectedScenes
-                .filter({$0.activationState == .foregroundActive})
-                .compactMap({$0 as? UIWindowScene})
-                .first?.windows
-                .filter({$0.isKeyWindow}).first
+            .filter({$0.activationState == .foregroundActive})
+            .compactMap({$0 as? UIWindowScene})
+            .first?.windows
+            .filter({$0.isKeyWindow}).first
         else {return}
         
         guard let mainTabBarController = keyWindow.rootViewController as? BaseTabBarController else {return}
         
-        favoritePodcasts = UserDefaults.standard.savedPodcasts()
+        favoritePodcasts = UserDefaults.standard.fetchFavoritePodcasts()
         collectionView.reloadData()
         mainTabBarController.viewControllers?[1].tabBarItem.badgeValue = nil
         
         
     }
     
-   
+    
     
     fileprivate func setupCollectionView() {
         collectionView.register(FavoriteCell.self, forCellWithReuseIdentifier: cellID)
@@ -59,11 +59,15 @@ class FavoritesController: BaseListController {
             print("Removing podcast...")
             
             // For animation, you need to delete podcast from that array at first and than from collectionview...
+            let selectedPodcast = self.favoritePodcasts[selectedIndexPath.item]
+
+            print(selectedPodcast.collectionId ?? "", selectedPodcast.collectionName ?? "")
             
             self.favoritePodcasts.remove(at: selectedIndexPath.item)
             self.collectionView.deleteItems(at: [selectedIndexPath])
+            UserDefaults.standard.deletePodcast(podcast: selectedPodcast)
+            self.favoritePodcasts = UserDefaults.standard.fetchFavoritePodcasts()
             
-
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
             print("Cancel")
@@ -79,48 +83,17 @@ class FavoritesController: BaseListController {
         episodesController.podcast = selectedPodcast
         navigationController?.pushViewController(episodesController, animated: true)
         
-        guard let feedUrl = selectedPodcast.feedUrl else {return}
-        print(feedUrl)
-        
-        guard let url = URL(string: feedUrl) else {return}
-        
-        
-        DispatchQueue.global(qos: .background).async {
-            let parser = FeedParser(URL: url)
+        ServiceManager.shared.fetchEpisodes(podcast: selectedPodcast) { episodes, err in
             
-            parser.parseAsync { result in
-                
-                
-                switch result {
-                case .success(let feed):
-                    
-                    switch feed {
-                    case let .rss(feed):
-                        var episodes = [RSSFeedItem]()
-                        
-                        feed.items?.forEach({ episode in
-                            episodes.append(episode)
-                        })
-                        episodesController.episodes = episodes
-                        DispatchQueue.main.async {
-                            episodesController.collectionView.reloadData()
-                        }
-                        break
-                    case .atom(_):
-                        break
-                    case .json(_):
-                        break
-                    }
-                    
-                    
-                    
-                case .failure(let err):
-                    print(err)
-                }
-        }
-        
-        
-        
+            if let err = err {
+                print("Failed to fetch episodes with feed kit", err)
+                return
+            }
+            guard let episodes = episodes else {return}
+            episodesController.episodes = episodes
+            DispatchQueue.main.async {
+                episodesController.collectionView.reloadData()
+            }
         }
     }
     
@@ -146,7 +119,7 @@ extension FavoritesController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let width = (collectionView.frame.width - 3 * 16) / 2
-        return .init(width: width, height: width + 56)
+        return .init(width: width, height: width + 60)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

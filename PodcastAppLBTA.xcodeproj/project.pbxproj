@@ -27,6 +27,8 @@
 		436110732BA8BBF30081FAA8 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110722BA8BBF30081FAA8 /* EpisodeCell.swift */; };
 		436110762BAB58190081FAA8 /* PodcastPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 436110752BAB58190081FAA8 /* PodcastPlayerView.swift */; };
 		4361107B2BAF49CE0081FAA8 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4361107A2BAF49CE0081FAA8 /* FeedKit */; };
+		43D6B9352BC3C65A0083115B /* DownloadCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D6B9342BC3C65A0083115B /* DownloadCell.swift */; };
+		43D6B9382BC55EFD0083115B /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 43D6B9372BC55EFD0083115B /* SwipeCellKit */; };
 		43FC261B2BB0980700704CB0 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FC261A2BB0980700704CB0 /* CMTime.swift */; };
 		43FC261D2BBCA08B00704CB0 /* FavoriteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FC261C2BBCA08B00704CB0 /* FavoriteCell.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +54,7 @@
 		436110702BA898BC0081FAA8 /* EpisodesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodesController.swift; sourceTree = "<group>"; };
 		436110722BA8BBF30081FAA8 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
 		436110752BAB58190081FAA8 /* PodcastPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastPlayerView.swift; sourceTree = "<group>"; };
+		43D6B9342BC3C65A0083115B /* DownloadCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadCell.swift; sourceTree = "<group>"; };
 		43FC261A2BB0980700704CB0 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
 		43FC261C2BBCA08B00704CB0 /* FavoriteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4361106D2BA3A3000081FAA8 /* SDWebImage in Frameworks */,
+				43D6B9382BC55EFD0083115B /* SwipeCellKit in Frameworks */,
 				4361107B2BAF49CE0081FAA8 /* FeedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -140,6 +144,7 @@
 				436110612BA350890081FAA8 /* SearchCell.swift */,
 				436110722BA8BBF30081FAA8 /* EpisodeCell.swift */,
 				43FC261C2BBCA08B00704CB0 /* FavoriteCell.swift */,
+				43D6B9342BC3C65A0083115B /* DownloadCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -188,6 +193,7 @@
 			packageProductDependencies = (
 				4361106C2BA3A3000081FAA8 /* SDWebImage */,
 				4361107A2BAF49CE0081FAA8 /* FeedKit */,
+				43D6B9372BC55EFD0083115B /* SwipeCellKit */,
 			);
 			productName = PodcastAppLBTA;
 			productReference = 4361103E2BA1E1E30081FAA8 /* PodcastAppLBTA.app */;
@@ -220,6 +226,7 @@
 			packageReferences = (
 				4361106B2BA3A3000081FAA8 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				436110792BAF49CE0081FAA8 /* XCRemoteSwiftPackageReference "FeedKit" */,
+				43D6B9362BC55EFD0083115B /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
 			);
 			productRefGroup = 4361103F2BA1E1E30081FAA8 /* Products */;
 			projectDirPath = "";
@@ -255,6 +262,7 @@
 				436110582BA1ED340081FAA8 /* FavoritesController.swift in Sources */,
 				43FC261B2BB0980700704CB0 /* CMTime.swift in Sources */,
 				4361105C2BA1EED00081FAA8 /* BaseListController.swift in Sources */,
+				43D6B9352BC3C65A0083115B /* DownloadCell.swift in Sources */,
 				436110642BA351000081FAA8 /* UIView+Layout.swift in Sources */,
 				4361105A2BA1ED580081FAA8 /* DownloadsController.swift in Sources */,
 				4361106A2BA37E1C0081FAA8 /* Podcast.swift in Sources */,
@@ -490,6 +498,14 @@
 				kind = branch;
 			};
 		};
+		43D6B9362BC55EFD0083115B /* XCRemoteSwiftPackageReference "SwipeCellKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwipeCellKit/SwipeCellKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -502,6 +518,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 436110792BAF49CE0081FAA8 /* XCRemoteSwiftPackageReference "FeedKit" */;
 			productName = FeedKit;
+		};
+		43D6B9372BC55EFD0083115B /* SwipeCellKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 43D6B9362BC55EFD0083115B /* XCRemoteSwiftPackageReference "SwipeCellKit" */;
+			productName = SwipeCellKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

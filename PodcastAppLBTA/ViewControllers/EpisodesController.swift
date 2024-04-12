@@ -7,9 +7,10 @@
 
 import UIKit
 import FeedKit
+import SwipeCellKit
 
-class EpisodesController: BaseListController {
-    
+class EpisodesController: BaseListController, SwipeCollectionViewCellDelegate {
+   
     var podcast: PodcastResult? {
         didSet {
             navigationItem.title = podcast?.collectionName
@@ -18,7 +19,7 @@ class EpisodesController: BaseListController {
     
     let cellID = "cellID"
     
-    var episodes = [RSSFeedItem]()
+    var episodes = [Episode]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,14 +35,12 @@ class EpisodesController: BaseListController {
         collectionView.register(EpisodeCell.self, forCellWithReuseIdentifier: cellID)
     }
     
-    @objc func handleLongPress(gesture: UILongPressGestureRecognizer) {
-        print("****")
-    }
+   
     
     fileprivate func setupFavButton() {
         
         
-        let favoritePodcasts = UserDefaults.standard.savedPodcasts()
+        let favoritePodcasts = UserDefaults.standard.fetchFavoritePodcasts()
         
         if favoritePodcasts.firstIndex(where: {$0.collectionId == self.podcast?.collectionId}) != nil {
             navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "heart.fill"), style: .done, target: self, action: #selector(handleHeartClicked))
@@ -71,7 +70,7 @@ class EpisodesController: BaseListController {
 
         do {
 //            guard let savedPodcasts = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(savedPodcastsData) as? [PodcastResult] else {return}
-            let savedPodcasts = UserDefaults.standard.savedPodcasts()
+            let savedPodcasts = UserDefaults.standard.fetchFavoritePodcasts()
             var listOfPodcasts = savedPodcasts
             listOfPodcasts.append(podcast)
             let data = try NSKeyedArchiver.archivedData(withRootObject: listOfPodcasts, requiringSecureCoding: false)
@@ -158,14 +157,33 @@ class EpisodesController: BaseListController {
     }
     
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> SwipeCollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! EpisodeCell
-        
+        cell.delegate = self
         let episode = episodes[indexPath.item]
         cell.episode = episode
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        guard orientation == .right else { return nil }
+       
+        let selectedEpisode = episodes[indexPath.item]
+        print(selectedEpisode.title ?? "")
+        
+        let downloadAction = SwipeAction(style: .default, title: "Download") { _, _ in
+            print("Downloading...")
+            UserDefaults.standard.downloadEpisode(episode: selectedEpisode)
+            
+        }
+        
+        
+        return [downloadAction]
+    }
+    
+   
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
@@ -193,6 +211,7 @@ class EpisodesController: BaseListController {
 //        podcastPlayerView.episode = episode
         
     }
+    
 }
 
 
