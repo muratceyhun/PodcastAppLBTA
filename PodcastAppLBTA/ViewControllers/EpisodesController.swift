@@ -172,9 +172,10 @@ class EpisodesController: BaseListController, SwipeCollectionViewCellDelegate {
        
         let selectedEpisode = episodes[indexPath.item]
         print(selectedEpisode.title ?? "")
-        
         let downloadAction = SwipeAction(style: .default, title: "Download") { _, _ in
             print("Downloading...")
+            ServiceManager.shared.downloadEpisode(episode: selectedEpisode)
+
             UserDefaults.standard.downloadEpisode(episode: selectedEpisode)
             
         }

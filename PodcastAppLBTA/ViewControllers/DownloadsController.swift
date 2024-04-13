@@ -43,8 +43,26 @@ class DownloadsController: BaseListController, SwipeCollectionViewCellDelegate {
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedEpisode = downloadedEpisodes[indexPath.item]
         
+        let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        
+        
+        let tabBarController = keyWindow?.rootViewController as? BaseTabBarController
+        tabBarController?.maximizeFloatView()
+        
+        tabBarController?.playerView.episode = selectedEpisode
+        
+        
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, editActionsForItemAt indexPath: IndexPath, for orientation: SwipeCellKit.SwipeActionsOrientation) -> [SwipeCellKit.SwipeAction]? {
+        guard orientation == .right else {return nil}
         let selectedEpisode = downloadedEpisodes[indexPath.item]
         
         
