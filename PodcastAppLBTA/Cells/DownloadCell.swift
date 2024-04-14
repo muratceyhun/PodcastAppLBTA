@@ -19,7 +19,6 @@ class DownloadCell: SwipeCollectionViewCell {
                 episodeImageView.sd_setImage(with: URL(string: imageUrl))
                 episodeName.text = episode?.title ?? ""
                 episodeDescription.text = episode?.description ?? ""
-
     //    MARK: - Date Formatter
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "MMMM d, yyyy"
@@ -28,10 +27,8 @@ class DownloadCell: SwipeCollectionViewCell {
 
             }
         }
-        
-
-        
-        
+    
+ 
         let episodeImageView: UIImageView = {
             let iw = UIImageView()
             iw.backgroundColor = .red
@@ -61,6 +58,14 @@ class DownloadCell: SwipeCollectionViewCell {
             return label
         }()
     
+    let downloadProgressLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
+        label.textAlignment = .center
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
@@ -69,6 +74,8 @@ class DownloadCell: SwipeCollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+   
     
       
         
@@ -86,6 +93,9 @@ class DownloadCell: SwipeCollectionViewCell {
             verticalStackView.axis = .vertical
             verticalStackView.anchor(top: episodeImageView.topAnchor, leading: episodeImageView.trailingAnchor, bottom: episodeImageView.bottomAnchor, trailing: trailingAnchor, padding: .init(top: 0, left: 16, bottom: 0, right: 0))
             verticalStackView.distribution = .fillProportionally
+            
+            episodeImageView.addSubview(downloadProgressLabel)
+            downloadProgressLabel.fillSuperview()
         }
         
         
