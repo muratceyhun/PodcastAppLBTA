@@ -75,7 +75,6 @@ class PodcastPlayerView: UIView {
     
     let imageView: UIImageView = {
         let iw = UIImageView()
-        iw.backgroundColor = .green
         iw.clipsToBounds = true
         return iw
     }()
@@ -417,8 +416,6 @@ class PodcastPlayerView: UIView {
         closeButton.constrainHeight(constant: 64)
         closeButton.constrainWidth(constant: 64)
         
-        
-
     }
     
     required init?(coder: NSCoder) {

@@ -8,7 +8,7 @@
 import UIKit
 
 class BaseTabBarController: UITabBarController {
-   
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +16,7 @@ class BaseTabBarController: UITabBarController {
         setupTabBarApperance()
         setupViewControllers()
         setupFloatView()
-
+        
     }
     
     
@@ -35,8 +35,8 @@ class BaseTabBarController: UITabBarController {
     
     fileprivate func setupTabBarApperance() {
         let tabBarAppearance = UITabBarAppearance()
-//        tabBarAppearance.configureWithOpaqueBackground()
-//        tabBarAppearance.configureWithTransparentBackground()
+        //        tabBarAppearance.configureWithOpaqueBackground()
+        //        tabBarAppearance.configureWithTransparentBackground()
         tabBarAppearance.configureWithDefaultBackground()
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
     }
@@ -51,9 +51,9 @@ class BaseTabBarController: UITabBarController {
     
     
     fileprivate func setupFloatView() {
-//        view.addSubview(playerView)
+        //        view.addSubview(playerView)
         view.insertSubview(playerView, belowSubview: tabBar)
-
+        
         playerView.translatesAutoresizingMaskIntoConstraints = false
         maximizeFloatViewConstant = playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: view.frame.height)
         maximizeFloatViewConstant?.isActive = true
@@ -71,7 +71,7 @@ class BaseTabBarController: UITabBarController {
         
     }
     
- 
+    
     
     @objc func handleTapMaximize() {
         self.maximizeFloatView()
@@ -113,24 +113,24 @@ class BaseTabBarController: UITabBarController {
             self.playerView.transform = .identity
             
             if translationY > threshold {
-                    self.playerView.miniPlayerView.alpha = 0
-                    self.playerView.imageView.alpha = 1
-                    self.playerView.closeButton.alpha = 1
-                    self.maximizeFloatView()
-                    print("maximize")
+                self.playerView.miniPlayerView.alpha = 0
+                self.playerView.imageView.alpha = 1
+                self.playerView.closeButton.alpha = 1
+                self.maximizeFloatView()
+                print("maximize")
             } else {
-                    print("minimize")
-                    self.playerView.miniPlayerView.alpha = 1
-                    self.playerView.imageView.alpha = 0
-                    self.playerView.closeButton.alpha = 0
-
+                print("minimize")
+                self.playerView.miniPlayerView.alpha = 1
+                self.playerView.imageView.alpha = 0
+                self.playerView.closeButton.alpha = 0
+                
             }
         }
     }
     
     
     @objc func minimizeFloatView() {
-
+        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut) {
             
             self.maximizeFloatViewConstant?.isActive = false
@@ -170,7 +170,7 @@ class BaseTabBarController: UITabBarController {
         
         let viewController = viewController
         viewController.navigationItem.title = navTitle
-
+        
         let navController = UINavigationController(rootViewController: viewController)
         navController.navigationBar.prefersLargeTitles = true
         
@@ -180,7 +180,6 @@ class BaseTabBarController: UITabBarController {
         return navController
         
     }
-
-
+    
 }
 

@@ -106,8 +106,6 @@ class DownloadsController: BaseListController, SwipeCollectionViewCellDelegate {
             present(alertController, animated: true)
             
         }
-        
-        
     }
 
     

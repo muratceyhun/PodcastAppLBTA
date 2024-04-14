@@ -82,8 +82,6 @@ class ServiceManager {
                         break
                     }
                     
-                    
-                    
                 case .failure(let err):
                     print(err)
                     completion(nil, err)

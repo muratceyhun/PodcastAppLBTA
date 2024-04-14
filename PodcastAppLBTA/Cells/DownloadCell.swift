@@ -31,7 +31,6 @@ class DownloadCell: SwipeCollectionViewCell {
  
         let episodeImageView: UIImageView = {
             let iw = UIImageView()
-            iw.backgroundColor = .red
             iw.layer.cornerRadius = 12
             iw.clipsToBounds = true
             return iw
@@ -61,6 +60,8 @@ class DownloadCell: SwipeCollectionViewCell {
     let downloadProgressLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
+        label.shadowColor = .black
+        label.shadowOffset = .init(width: 2, height: 2)
         label.font = UIFont.systemFont(ofSize: 28, weight: .semibold)
         label.textAlignment = .center
         return label

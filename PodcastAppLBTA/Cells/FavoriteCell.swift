@@ -23,7 +23,6 @@ class FavoriteCell: UICollectionViewCell {
     
     let imageView: UIImageView = {
         let iw = UIImageView()
-        iw.backgroundColor = .black
         iw.layer.cornerRadius = 12
         iw.clipsToBounds = true
         return iw

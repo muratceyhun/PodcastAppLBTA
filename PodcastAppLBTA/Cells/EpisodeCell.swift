@@ -31,7 +31,6 @@ class EpisodeCell: SwipeCollectionViewCell {
 
     let episodeImageView: UIImageView = {
         let iw = UIImageView()
-        iw.backgroundColor = .red
         iw.layer.cornerRadius = 12
         iw.clipsToBounds = true
         return iw
