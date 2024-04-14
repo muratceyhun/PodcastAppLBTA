@@ -52,11 +52,22 @@ class DownloadsController: BaseListController, SwipeCollectionViewCellDelegate {
                 .first?.windows
                 .filter({$0.isKeyWindow}).first
         
-        
-        let tabBarController = keyWindow?.rootViewController as? BaseTabBarController
-        tabBarController?.maximizeFloatView()
-        
-        tabBarController?.playerView.episode = selectedEpisode
+        if selectedEpisode.fileUrl != nil {
+            
+            let tabBarController = keyWindow?.rootViewController as? BaseTabBarController
+            tabBarController?.maximizeFloatView()
+            
+            tabBarController?.playerView.episode = selectedEpisode
+        } else {
+            
+            let alertController = UIAlertController(title: "File URL not found", message: "Cannot find local file, play using stream URL instead.", preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                <#code#>
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            present(alertController, animated: true)
+            
+        }
         
         
     }
